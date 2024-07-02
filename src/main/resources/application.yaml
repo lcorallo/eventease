@@ -1,0 +1,10 @@
+quarkus:
+  datasource:
+    db-kind: postgresql
+    username: quarkus_test
+    password: quarkus_test
+    reactive:
+      url: vertx-reactive:postgresql://localhost/eventease
+  hibernate-orm:
+    database:
+      generation: drop-and-create

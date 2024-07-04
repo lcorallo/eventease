@@ -5,22 +5,16 @@ import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.annotations.UuidGenerator;
 import org.servament.model.EventStatus;
 
 import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 
 @MappedSuperclass
 public class Event extends PanacheEntityBase {
-
-    @Id
-    @UuidGenerator
-    private UUID id;
 
     @Column(name = "activity")
     private UUID activityId;
@@ -45,8 +39,10 @@ public class Event extends PanacheEntityBase {
     private UUID locationId;
 
     @CreationTimestamp
+    @Column(name = "created_at")
     private Instant createdAt;
-
+    
     @UpdateTimestamp
-    private Instant updateAt;
+    @Column(name = "update_at")
+    private Instant updateAt; 
 }

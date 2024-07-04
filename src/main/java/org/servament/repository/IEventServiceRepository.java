@@ -1,4 +1,4 @@
-package repository.servament.repository;
+package org.servament.repository;
 
 import java.util.UUID;
 

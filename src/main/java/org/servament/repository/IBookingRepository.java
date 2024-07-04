@@ -1,4 +1,4 @@
-package repository.servament.repository;
+package org.servament.repository;
 
 import org.servament.entity.Booking;
 import org.servament.model.filter.BookingFilter;

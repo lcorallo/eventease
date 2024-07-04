@@ -1,0 +1,27 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: eventease_db
+    environment:
+      POSTGRES_USER: quarkus_usr_dev
+      POSTGRES_PASSWORD: quarkus_pwd_dev
+      POSTGRES_DB: eventease
+    ports:
+      - "5432:5432"
+    networks:
+      - eventease-dev
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    networks:
+      - eventease-dev
+
+
+networks:
+  eventease-dev:

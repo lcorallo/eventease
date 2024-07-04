@@ -1,10 +1,14 @@
 quarkus:
-  datasource:
-    db-kind: postgresql
-    username: quarkus_test
-    password: quarkus_test
-    reactive:
-      url: vertx-reactive:postgresql://localhost/eventease
-  hibernate-orm:
-    database:
-      generation: drop-and-create
+  swagger-ui:
+    always-include: true
+    path: /swagger
+  smallrye-openapi:
+    info-title: Event-Ease API
+    info-version: 1.0.0
+    info-description: Seamlessly manage any event quickly and easily with our versatile SaaS platform. Perfect for any occasion.
+    info-terms-of-service: Your terms here
+    info-contact-email: coralo.luca@outlook.com
+    info-contact-name: Example API Support
+    info-contact-url: http://exampleurl.com/contact
+    info-license-name: MIT License
+    info-license-url: https://opensource.org/license/mit

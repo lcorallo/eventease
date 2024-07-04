@@ -14,6 +14,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -36,7 +37,7 @@ public class Booking extends PanacheEntityBase{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_service_id", referencedColumnName = "id", nullable = false)
     private EventService event;
 
@@ -48,12 +49,13 @@ public class Booking extends PanacheEntityBase{
     private BookingStatus status;
     
     @CreationTimestamp
+    @Column(name = "created_at")
     private Instant createdAt;
 
     @UpdateTimestamp
+    @Column(name = "update_at")
     private Instant updateAt;
 
-        
     @Override 
     public final boolean equals(Object o) { 
         if (this == o) return true; 

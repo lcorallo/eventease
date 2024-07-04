@@ -10,6 +10,7 @@ import org.hibernate.proxy.HibernateProxy;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -33,10 +34,10 @@ public class EventService extends Event {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID id;
 
-    @OneToMany(mappedBy = "eventService", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "eventService", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<EventOperation> operations;
 
-    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Booking> bookings;
 
     @Column(name = "code", unique = true, length = 100)

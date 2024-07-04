@@ -59,3 +59,31 @@ If you want to learn more about building native executables, please consult <htt
 - Hibernate Validator ([guide](https://quarkus.io/guides/validation)): Validate object properties (field, getter) and method parameters for your beans (REST, CDI, Jakarta Persistence)
 - REST resources for Hibernate Reactive with Panache ([guide](https://quarkus.io/guides/rest-data-panache)): Generate Jakarta REST resources for your Hibernate Reactive Panache entities and repositories
 - Reactive Routes ([guide](https://quarkus.io/guides/reactive-routes)): REST framework offering the route model to define non blocking endpoints
+
+# Quick Start
+
+### Starting the Service with Docker Compose
+To start the service in development mode, run the following command:
+
+```bash
+docker compose -f docker-compose.dev.yml up -d
+```
+
+📄 This command starts all services defined in the `docker-compose.dev.yml` file in `detached` mode, meaning in the background.
+
+---
+
+### Retrieving the Database Container IP Address
+To retrieve the IP address of the database container, use the following command:
+
+```bash
+docker inspect eventbase_db | grep IPAddress
+```
+
+🔍 **Note**: Use the obtained IP address to connect to the database via pgAdmin.
+
+---
+
+### Connecting to the Database with pgAdmin
+1. **Open pgAdmin**.
+2. **Create a new server** and use the IP address obtained in the previous step as the server address.

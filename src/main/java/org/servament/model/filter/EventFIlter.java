@@ -1,6 +1,6 @@
 package org.servament.model.filter;
 
-import java.util.List;
+import java.util.Set;
 
 import org.servament.model.EventStatus;
 
@@ -17,6 +17,6 @@ import lombok.Setter;
 
 public abstract class EventFIlter {
 
-    private List<EventStatus> statuses;
+    private Set<EventStatus> statuses;
 
 }

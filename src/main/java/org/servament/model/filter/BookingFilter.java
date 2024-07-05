@@ -1,6 +1,7 @@
 package org.servament.model.filter;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.servament.model.BookingStatus;
@@ -17,7 +18,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class BookingFilter {
 
-    private List<BookingStatus> statuses;
+    private Set<BookingStatus> statuses;
 
     private List<UUID> events;
 

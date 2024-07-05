@@ -29,3 +29,12 @@ VALUES
 (13,'45d6e7a2-f9b7-49f0-8a5c-c2b6a0b8aeaf','5644095c-df28-471b-8b4e-1307fcbe6983', 'PENDING', '2024-07-13 22:00:00', '2024-07-13 22:00:00'),
 (14,'cdf7a3d7-ebe3-42e9-986d-5d5c5b750446','f7c9948d-bbc8-460f-8ddb-7873e64c9d43', 'CONFIRMED', '2024-07-14 23:00:00', '2024-07-14 23:00:00'),
 (15,'0bfea64f-e1a6-432d-978a-5425e2b065bc','575bc176-6a2f-4b31-bfac-121466f39d9c', 'CANCELLED', '2024-07-15 00:00:00', '2024-07-15 00:00:00');
+
+-- Inserting 5 records into the event_operation table
+INSERT INTO event_operation (id, activity, start_datetime, estimated_end_datetime, end_datetime, status, note, location, created_at, update_at, event_service_id, operator, num_partecipants)
+VALUES
+    ('1d6d7fb0-32f1-4bdc-b1d4-d51b2a68fd8e', 'c41f83e3-37d2-489b-aea3-33ab09b9dfe1', '2024-07-01T08:00:00Z', '2024-07-01T10:00:00Z', '2024-07-01T09:30:00Z', 'COMPLETED', 'Event note 1', 'c8d1f96b-2d9e-4dbb-9f4f-7e2a1c3fb6f4', '2024-07-01T07:00:00Z', '2024-07-01T07:30:00Z', '1f8a6e3e-2c6b-4e69-8a47-13543b7e1c45', '33d33c37-c214-4ea1-9d9e-dc9d7f2e9881', 100),
+    ('2e7e12b5-5022-4566-a1c9-78e6b0e212e4', '2a516c0f-43f8-4e65-bf2b-52b516c0f43f', '2024-07-02T09:00:00Z', '2024-07-02T11:00:00Z', '2024-07-02T10:30:00Z', 'BOOKABLE', 'Event note 2', '2d8c4b6c-d7a9-44a2-a9a1-f4f9a8c0d9f4', '2024-07-02T08:00:00Z', '2024-07-02T08:30:00Z', '1f8a6e3e-2c6b-4e69-8a47-13543b7e1c45', '4bcee70a-925f-4e4e-b93e-37c4b5b0d6f1', 150),
+    ('3f7f13b6-6133-4757-b1e9-89e7c0e323d5', '3a516d0e-54f9-4f76-af3c-63b527d1f64a', '2024-07-03T10:00:00Z', '2024-07-03T12:00:00Z', '2024-07-03T11:30:00Z', 'CANCELLED', 'Event note 3', '3e9d5b7d-d8b0-55a3-bab2-04fb9b1a0a10', '2024-07-03T09:00:00Z', '2024-07-03T09:30:00Z', '1f8a6e3e-2c6b-4e69-8a47-13543b7e1c45', '5cfee80b-a236-4f5f-c9f1-48d5b6c1e7f2', 200),
+    ('1cac7c77-5d47-49eb-89d5-5c9ceb626e96', '4b617e1f-65fa-5f87-bf4d-74c638e2e75b', '2024-07-04T11:00:00Z', '2024-07-04T13:00:00Z', '2024-07-04T12:30:00Z', 'IN_PROGRESS', 'Event note 4', '4f1d6c8e-e9c1-66b4-bbc3-15fcad1b2b21', '2024-07-04T10:00:00Z', '2024-07-04T10:30:00Z', '1f8a6e3e-2c6b-4e69-8a47-13543b7e1c45', '92c27a07-79d5-4bdb-95ac-1f52d7b0aa39', 250),
+    ('f357035d-2f80-421b-898b-e5637e37f50e', '3e1a10b5-704e-488b-a5d0-afe91f82c6d9', '2024-07-05T12:00:00Z', '2024-07-05T14:00:00Z', '2024-07-05T13:30:00Z', 'DRAFT', 'Event note 5', '4d70dbcc-730c-4c8f-829b-973b421b0ecb', '2024-07-05T11:00:00Z', '2024-07-05T11:30:00Z', '1f8a6e3e-2c6b-4e69-8a47-13543b7e1c45', '0ef3b5f9-f8e0-4c4b-90af-d35c8f664207', 300);

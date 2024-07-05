@@ -1,6 +1,6 @@
 package org.servament.model.filter;
 
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;
@@ -15,8 +15,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class EventOperationFilter extends EventFIlter {
 
-    private List<UUID> eventServiceIds;
+    private Set<UUID> eventServiceIds;
     
-    private List<UUID> operators;
+    private Set<UUID> operators;
 
 }

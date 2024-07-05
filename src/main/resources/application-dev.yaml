@@ -1,6 +1,14 @@
 quarkus:
   log:
     level: INFO
+    category:
+      "org.hibernate":
+        level: INFO
+      "org.hibernate.SQL":
+        level: INFO
+      "org.hibernate.type":
+        level: INFO
+
   http:
     cors: true
     cors:
@@ -15,3 +23,5 @@ quarkus:
     database:
       generation: drop-and-create
     sql-load-script: import-dev.sql
+    log:
+      sql: true

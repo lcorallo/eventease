@@ -6,6 +6,8 @@ import java.util.UUID;
 import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.proxy.HibernateProxy;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -32,8 +34,9 @@ public class EventOperation extends Event {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "event_service_id", referencedColumnName = "id", nullable = false)
+    @JsonBackReference
     private EventService eventService;
 
     @Column(name = "operator")

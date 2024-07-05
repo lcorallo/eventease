@@ -9,6 +9,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.proxy.HibernateProxy;
 import org.servament.model.BookingStatus;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -37,12 +39,13 @@ public class Booking extends PanacheEntityBase{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "event_service_id", referencedColumnName = "id", nullable = false)
+    @JsonManagedReference
     private EventService event;
 
     @Column(name = "consumer")
-    private UUID consumerId;
+    private UUID consumer;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")

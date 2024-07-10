@@ -37,7 +37,7 @@ public class EventService extends Event {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID id;
 
-    @OneToMany(mappedBy = "eventService", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonManagedReference
     private List<EventOperation> operations;
 

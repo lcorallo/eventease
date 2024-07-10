@@ -16,7 +16,7 @@ import lombok.Setter;
 
 @NoArgsConstructor
 @AllArgsConstructor
-public class BookingFilter {
+public class BookingFilter extends BaseFilter {
 
     private Set<BookingStatus> statuses;
 

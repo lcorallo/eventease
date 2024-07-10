@@ -1,9 +1,5 @@
 package org.servament.model.filter;
 
-import java.util.Set;
-
-import org.servament.model.EventStatus;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,11 +8,11 @@ import lombok.Setter;
 @Getter
 @Setter
 
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+public class BaseFilter {
 
-public abstract class EventFIlter extends BaseFilter {
+    public Integer limit = 100;
 
-    private Set<EventStatus> statuses;
-
+    public Integer offset = 0;
 }

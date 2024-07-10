@@ -37,10 +37,10 @@ public class EventOperation extends Event {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "event_service_id", referencedColumnName = "id", nullable = false)
     @JsonBackReference
-    private EventService eventService;
+    private EventService event;
 
     @Column(name = "operator")
-    private UUID operatorId;
+    private UUID operator;
 
     @Column(name = "num_partecipants")
     private Integer partecipants;

@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.servament.entity.EventService;
-import org.servament.model.BookingStatus;
+import org.servament.model.EventStatus;
 import org.servament.model.Pagination;
 import org.servament.model.filter.EventServiceFilter;
 import org.servament.model.filter.PaginationFilter;
@@ -27,7 +27,7 @@ public class EventServiceRepository implements IEventServiceRepository {
             //Append all filter maps and create the query
             if( filter.getStatuses() != null &&
                 !filter.getStatuses().isEmpty() &&
-                filter.getStatuses().size() != BookingStatus.values().length
+                filter.getStatuses().size() != EventStatus.values().length
             ) {
                 params.put("statuses", filter.getStatuses());
                 strBuilder.append("status IN :statuses");
@@ -53,7 +53,7 @@ public class EventServiceRepository implements IEventServiceRepository {
 
     @Override
     public Uni<Pagination<EventService>> pagination(PaginationFilter paginationFilter, EventServiceFilter filter) {
-      final PanacheQuery<EventService> query = this.buildFetchQuery(filter);
+        final PanacheQuery<EventService> query = this.buildFetchQuery(filter);
 
         final Uni<List<EventService>> pagedData = query
             .page(paginationFilter.getNumPage(), paginationFilter.getPageSize())

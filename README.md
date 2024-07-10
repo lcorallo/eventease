@@ -77,7 +77,7 @@ docker compose -f docker-compose.dev.yml up -d
 To retrieve the IP address of the database container, use the following command:
 
 ```bash
-docker inspect eventbase_db | grep IPAddress
+docker inspect eventease_db | grep IPAddress
 ```
 
 🔍 **Note**: Use the obtained IP address to connect to the database via pgAdmin.

@@ -32,5 +32,7 @@ public class EventServiceResource {
 
         PaginationFilter pagFilter = new PaginationFilter(5, 0);
 
-        return this.eventServiceRepository.pagination(null, null)
+        return this.eventServiceRepository.pagination(null, null);
     }
+
+}

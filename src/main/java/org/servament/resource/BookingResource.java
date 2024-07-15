@@ -4,13 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.logging.Logger;
 
-import org.servament.entity.Booking;
+import org.jboss.logmanager.Level;
+import org.servament.dto.BookingDTO;
 import org.servament.model.BookingStatus;
 import org.servament.model.Pagination;
 import org.servament.model.filter.BookingFilter;
 import org.servament.model.filter.PaginationFilter;
-import org.servament.repository.IBookingRepository;
+import org.servament.service.BookingService;
 
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -25,32 +27,37 @@ import jakarta.ws.rs.core.MediaType;
 @Produces(MediaType.APPLICATION_JSON)
 @ApplicationScoped
 public class BookingResource {
-    
+
     @Inject
-    private IBookingRepository bookingRepository;
+    private BookingService bookingService;
 
     @GET
     @Path("/bookings")
-    public Uni<List<Booking>> list() {
-        return this.bookingRepository.list(null);
+    public Uni<List<BookingDTO>> list() {
+        return this.bookingService.list(null).onFailure()
+        .call(e -> {
+            Logger.getLogger("MIO").log(Level.ERROR, null, e);
+
+            return Uni.createFrom().item(e);
+        });
     }
 
     @GET
     @Path("/bookings:paged")
-    public Uni<Pagination<Booking>> paginated() {
+    public Uni<Pagination<BookingDTO>> paginated() {
         List<UUID> eventIds = new ArrayList<>();
         eventIds.add(UUID.fromString("1f8a6e3e-2c6b-4e69-8a47-13543b7e1c45"));
 
         BookingFilter filter = new BookingFilter(Set.of(BookingStatus.PENDING, BookingStatus.CONFIRMED), null);
         PaginationFilter pagFilter = new PaginationFilter(5, 0);
 
-        return bookingRepository.pagination(pagFilter, filter);
+        return bookingService.pagination(pagFilter, filter);
     }
 
     @GET
     @Path("/bookings/{id}")
-    public Uni<Booking> findById(@PathParam("id") Long id) {
-        return this.bookingRepository.find(id);
+    public Uni<BookingDTO> findById(@PathParam("id") Long id) {
+        return this.bookingService.find(id);
     }
     
 

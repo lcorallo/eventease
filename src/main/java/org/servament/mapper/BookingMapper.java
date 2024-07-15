@@ -4,15 +4,18 @@ import java.util.List;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 import org.servament.dto.BookingDTO;
 import org.servament.entity.Booking;
+import org.servament.model.Pagination;
 
 @Mapper
 public interface BookingMapper {
 
     BookingMapper INSTANCE = Mappers.getMapper( BookingMapper.class );
 
+    @Named("toDTO")
     @Mapping(source = "id", target = "id")
     @Mapping(source = "event.id", target = "event")
     @Mapping(source = "event.code", target = "eventCode")
@@ -22,5 +25,14 @@ public interface BookingMapper {
     @Mapping(source = "createdAt", target = "createdAt")
     BookingDTO toDTO(Booking booking);
 
+    @Named("toDTOs")
     List<BookingDTO> toDTOs(List<Booking> bookings);
+
+    @Named("toPaginationDTO")
+    @Mapping(source = "page", target = "page")    
+    @Mapping(source = "size", target = "size")    
+    @Mapping(source = "totalPages", target = "totalPages")    
+    @Mapping(source = "totalSize", target = "totalSize")
+    @Mapping(source = "data", target = "data", qualifiedByName = "toDTOs")    
+    Pagination<BookingDTO> toPaginationDTO(Pagination<Booking> pagination);
 }

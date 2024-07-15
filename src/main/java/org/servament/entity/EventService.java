@@ -49,7 +49,7 @@ public class EventService extends Event {
     private String code;
 
     @Column(name = "supplier")
-    private UUID supplierId;
+    private UUID supplier;
 
     @Column(name = "num_availability")
     private Integer availabilty;    

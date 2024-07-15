@@ -14,6 +14,7 @@ import org.servament.model.filter.BookingFilter;
 import org.servament.model.filter.PaginationFilter;
 import org.servament.service.BookingService;
 
+import io.quarkus.hibernate.reactive.panache.common.WithSession;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -26,6 +27,7 @@ import jakarta.ws.rs.core.MediaType;
 @Path("/")
 @Produces(MediaType.APPLICATION_JSON)
 @ApplicationScoped
+@WithSession
 public class BookingResource {
 
     @Inject

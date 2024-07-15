@@ -15,7 +15,6 @@ public interface BookingMapper {
 
     BookingMapper INSTANCE = Mappers.getMapper( BookingMapper.class );
 
-    @Named("toDTO")
     @Mapping(source = "id", target = "id")
     @Mapping(source = "event.id", target = "event")
     @Mapping(source = "event.code", target = "eventCode")
@@ -28,7 +27,6 @@ public interface BookingMapper {
     @Named("toDTOs")
     List<BookingDTO> toDTOs(List<Booking> bookings);
 
-    @Named("toPaginationDTO")
     @Mapping(source = "page", target = "page")    
     @Mapping(source = "size", target = "size")    
     @Mapping(source = "totalPages", target = "totalPages")    

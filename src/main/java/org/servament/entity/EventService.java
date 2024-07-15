@@ -52,7 +52,7 @@ public class EventService extends Event {
     private UUID supplier;
 
     @Column(name = "num_availability")
-    private Integer availabilty;    
+    private Integer availability;    
 
     @Override 
     public final boolean equals(Object o) { 

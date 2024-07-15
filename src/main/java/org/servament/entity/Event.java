@@ -27,13 +27,13 @@ import lombok.Setter;
 public class Event extends PanacheEntityBase {
 
     @Column(name = "activity")
-    private UUID activityId;
+    private UUID activity;
 
     @Column(name = "start_datetime")
     private Instant startDateTime;
 
     @Column(name = "estimated_end_datetime")
-    private Instant estimatedEndDateTIme;
+    private Instant estimatedEndDateTime;
 
     @Column(name = "end_datetime")
     private Instant endDateTime;
@@ -46,7 +46,7 @@ public class Event extends PanacheEntityBase {
     private String note;
 
     @Column(name = "location")
-    private UUID locationId;
+    private UUID location;
 
     @CreationTimestamp
     @Column(name = "created_at")

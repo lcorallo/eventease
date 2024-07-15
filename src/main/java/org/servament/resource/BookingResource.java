@@ -18,11 +18,15 @@ import io.quarkus.hibernate.reactive.panache.common.WithSession;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.PATCH;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 @Path("/")
 @Produces(MediaType.APPLICATION_JSON)
@@ -60,6 +64,24 @@ public class BookingResource {
     @Path("/bookings/{id}")
     public Uni<BookingDTO> findById(@PathParam("id") Long id) {
         return this.bookingService.find(id);
+    }
+
+    @POST
+    @Path("/booking")
+    public Uni<BookingDTO> create() {
+        throw new UnsupportedOperationException();
+    }
+
+    @PATCH
+    @Path("/bookings/{id}")
+    public Uni<Response> update(@PathParam("id") Long id) {
+        throw new UnsupportedOperationException();
+    }
+
+    @DELETE
+    @Path("/bookings/{id}")
+    public Uni<Response> remove(@PathParam("id") Long id) {
+        throw new UnsupportedOperationException();
     }
     
 

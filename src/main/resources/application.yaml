@@ -3,6 +3,7 @@ quarkus:
     always-include: true
     path: /swagger
   smallrye-openapi:
+    store-schema-directory: ./src/main/resources/apis
     info-title: Event-Ease API
     info-version: 1.0.0
     info-description: Seamlessly manage any event quickly and easily with our versatile SaaS platform. Perfect for any occasion.

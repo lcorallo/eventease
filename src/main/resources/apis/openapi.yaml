@@ -1,0 +1,425 @@
+---
+openapi: 3.0.3
+info:
+  title: Event-Ease API
+  description: Seamlessly manage any event quickly and easily with our versatile SaaS
+    platform. Perfect for any occasion.
+  termsOfService: Your terms here
+  contact:
+    name: Example API Support
+    url: http://exampleurl.com/contact
+    email: coralo.luca@outlook.com
+  license:
+    name: MIT License
+    url: https://opensource.org/license/mit
+  version: 1.0.0
+servers:
+- url: http://localhost:8080
+  description: Auto generated value
+- url: http://0.0.0.0:8080
+  description: Auto generated value
+paths:
+  /booking:
+    post:
+      tags:
+      - Booking Resource
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookingDTO"
+  /bookings:
+    get:
+      tags:
+      - Booking Resource
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BookingDTO"
+  /bookings/{id}:
+    get:
+      tags:
+      - Booking Resource
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookingDTO"
+    delete:
+      tags:
+      - Booking Resource
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json: {}
+    patch:
+      tags:
+      - Booking Resource
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json: {}
+  /bookings:paged:
+    get:
+      tags:
+      - Booking Resource
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginationBookingDTO"
+  /event:
+    post:
+      tags:
+      - Event Resource
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EventDTO"
+  /events:
+    get:
+      tags:
+      - Event Resource
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EventDTO"
+  /events/{id}:
+    get:
+      tags:
+      - Event Resource
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          $ref: "#/components/schemas/UUID"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EventDTO"
+    delete:
+      tags:
+      - Event Resource
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          $ref: "#/components/schemas/UUID"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json: {}
+    patch:
+      tags:
+      - Event Resource
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          $ref: "#/components/schemas/UUID"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json: {}
+  /events:paged:
+    get:
+      tags:
+      - Event Resource
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginationEventDTO"
+  /operation:
+    post:
+      tags:
+      - Operation Resource
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperationDTO"
+  /operations:
+    get:
+      tags:
+      - Operation Resource
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/OperationDTO"
+  /operations/{id}:
+    get:
+      tags:
+      - Operation Resource
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          $ref: "#/components/schemas/UUID"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperationDTO"
+    delete:
+      tags:
+      - Operation Resource
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          $ref: "#/components/schemas/UUID"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json: {}
+    patch:
+      tags:
+      - Operation Resource
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          $ref: "#/components/schemas/UUID"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json: {}
+  /operations:paged:
+    get:
+      tags:
+      - Operation Resource
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginationOperationDTO"
+components:
+  schemas:
+    BookingDTO:
+      type: object
+      properties:
+        id:
+          format: int64
+          type: integer
+        event:
+          $ref: "#/components/schemas/UUID"
+        eventCode:
+          type: string
+        supplier:
+          $ref: "#/components/schemas/UUID"
+        consumer:
+          $ref: "#/components/schemas/UUID"
+        status:
+          $ref: "#/components/schemas/BookingStatus"
+        createdAt:
+          $ref: "#/components/schemas/Instant"
+    BookingStatus:
+      enum:
+      - PENDING
+      - CONFIRMED
+      - REJECTED
+      - CANCELLED
+      type: string
+    EventDTO:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/UUID"
+        activity:
+          $ref: "#/components/schemas/UUID"
+        operations:
+          uniqueItems: true
+          type: array
+          items:
+            format: uuid
+            pattern: "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}"
+            type: string
+        startDateTime:
+          $ref: "#/components/schemas/Instant"
+        estimatedEndDateTime:
+          $ref: "#/components/schemas/Instant"
+        endDateTime:
+          $ref: "#/components/schemas/Instant"
+        status:
+          $ref: "#/components/schemas/EventStatus"
+        note:
+          type: string
+        location:
+          $ref: "#/components/schemas/UUID"
+        code:
+          type: string
+        supplier:
+          $ref: "#/components/schemas/UUID"
+        availability:
+          format: int32
+          type: integer
+    EventStatus:
+      enum:
+      - DRAFT
+      - PUBLISHED
+      - BOOKABLE
+      - IN_PROGRESS
+      - COMPLETED
+      - CANCELLED
+      - CLOSED
+      type: string
+    Instant:
+      format: date-time
+      type: string
+      example: 2022-03-10T16:15:50Z
+    OperationDTO:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/UUID"
+        event:
+          $ref: "#/components/schemas/UUID"
+        activity:
+          $ref: "#/components/schemas/UUID"
+        startDateTime:
+          $ref: "#/components/schemas/Instant"
+        estimatedEndDateTime:
+          $ref: "#/components/schemas/Instant"
+        endDateTime:
+          $ref: "#/components/schemas/Instant"
+        status:
+          $ref: "#/components/schemas/EventStatus"
+        note:
+          type: string
+        location:
+          $ref: "#/components/schemas/UUID"
+        operator:
+          $ref: "#/components/schemas/UUID"
+        partecipants:
+          format: int32
+          type: integer
+    PaginationBookingDTO:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/BookingDTO"
+        page:
+          format: int32
+          type: integer
+        size:
+          format: int32
+          type: integer
+        totalPages:
+          format: int32
+          type: integer
+        totalSize:
+          format: int32
+          type: integer
+    PaginationEventDTO:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/EventDTO"
+        page:
+          format: int32
+          type: integer
+        size:
+          format: int32
+          type: integer
+        totalPages:
+          format: int32
+          type: integer
+        totalSize:
+          format: int32
+          type: integer
+    PaginationOperationDTO:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/OperationDTO"
+        page:
+          format: int32
+          type: integer
+        size:
+          format: int32
+          type: integer
+        totalPages:
+          format: int32
+          type: integer
+        totalSize:
+          format: int32
+          type: integer
+    UUID:
+      format: uuid
+      pattern: "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}"
+      type: string

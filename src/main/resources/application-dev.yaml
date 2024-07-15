@@ -1,13 +1,6 @@
 quarkus:
   log:
-    level: INFO
-    category:
-      "org.hibernate":
-        level: INFO
-      "org.hibernate.SQL":
-        level: INFO
-      "org.hibernate.type":
-        level: INFO
+    level: DEBUG
 
   http:
     cors: true

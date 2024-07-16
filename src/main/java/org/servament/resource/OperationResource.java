@@ -1,8 +1,10 @@
 package org.servament.resource;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
+import org.servament.dto.CreateOperationDTO;
 import org.servament.dto.OperationDTO;
 import org.servament.model.Pagination;
 import org.servament.model.filter.PaginationFilter;
@@ -12,6 +14,11 @@ import io.quarkus.hibernate.reactive.panache.common.WithSession;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
+import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PATCH;
@@ -34,7 +41,7 @@ public class OperationResource {
     @GET
     @Path("/operations")
     public Uni<List<OperationDTO>> list() {
-        return this.eventOperationService.list(null);        
+        return this.eventOperationService.list(null);
     }
 
     @GET
@@ -53,8 +60,16 @@ public class OperationResource {
 
     @POST
     @Path("/operation")
-    public Uni<OperationDTO> create() {
-        throw new UnsupportedOperationException();
+    public Uni<OperationDTO> create(CreateOperationDTO createOperationDTO) {
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
+
+        return Uni.createFrom()
+                .item(validator.validate(createOperationDTO))
+                .flatMap((Set<ConstraintViolation<CreateOperationDTO>> violations) -> !violations.isEmpty()
+                        ? Uni.createFrom().failure(new BadRequestException(violations.iterator().next().getMessage()))
+                        : this.eventOperationService.create(createOperationDTO));
+
     }
 
     @PATCH
@@ -68,6 +83,5 @@ public class OperationResource {
     public Uni<Response> remove(@PathParam("id") UUID id) {
         throw new UnsupportedOperationException();
     }
-
 
 }

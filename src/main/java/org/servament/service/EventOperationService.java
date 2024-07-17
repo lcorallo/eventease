@@ -7,6 +7,7 @@ import org.servament.dto.CreateOperationDTO;
 import org.servament.dto.OperationDTO;
 import org.servament.entity.EventOperation;
 import org.servament.entity.EventService;
+import org.servament.exception.EventServiceNotFoundException;
 import org.servament.mapper.EventOperationMapper;
 import org.servament.model.Pagination;
 import org.servament.model.filter.EventOperationFilter;
@@ -50,6 +51,7 @@ public class EventOperationService {
     @WithTransaction
     public Uni<OperationDTO> create(CreateOperationDTO createOperationDTO) {
         return this.eventServiceRepository.findById(createOperationDTO.getEvent())
+                .onFailure().transform(f -> new EventServiceNotFoundException(createOperationDTO.getEvent(), f.getCause()))
                 .flatMap((EventService eventService) -> Uni.combine().all().unis(
                         Uni.createFrom().item(createOperationDTO),
                         Uni.createFrom().item(eventService))

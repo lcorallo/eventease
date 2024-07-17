@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.servament.entity.EventService;
+import org.servament.exception.EventServiceNotFoundException;
 import org.servament.model.EventStatus;
 import org.servament.model.Pagination;
 import org.servament.model.filter.EventServiceFilter;
@@ -22,13 +23,12 @@ public class EventServiceRepository implements IEventServiceRepository {
     private PanacheQuery<EventService> buildFetchQuery(EventServiceFilter filter) {
         Map<String, Object> params = new HashMap<>();
         StringBuilder strBuilder = new StringBuilder("");
-        
-        if(filter != null) {
-            //Append all filter maps and create the query
-            if( filter.getStatuses() != null &&
-                !filter.getStatuses().isEmpty() &&
-                filter.getStatuses().size() != EventStatus.values().length
-            ) {
+
+        if (filter != null) {
+            // Append all filter maps and create the query
+            if (filter.getStatuses() != null &&
+                    !filter.getStatuses().isEmpty() &&
+                    filter.getStatuses().size() != EventStatus.values().length) {
                 params.put("statuses", filter.getStatuses());
                 strBuilder.append("status IN :statuses");
             }
@@ -42,8 +42,8 @@ public class EventServiceRepository implements IEventServiceRepository {
                 params.put("suppliers", filter.getSuppliers());
                 strBuilder.append(" and supplier IN :suppliers");
             }
-    
-            if(strBuilder.indexOf(" and", 0) == 0) {
+
+            if (strBuilder.indexOf(" and", 0) == 0) {
                 strBuilder.replace(0, 4, "");
             }
         }
@@ -56,21 +56,21 @@ public class EventServiceRepository implements IEventServiceRepository {
         final PanacheQuery<EventService> query = this.buildFetchQuery(filter);
 
         final Uni<List<EventService>> pagedData = query
-            .page(paginationFilter.getNumPage(), paginationFilter.getPageSize())
-            .list();
+                .page(paginationFilter.getNumPage(), paginationFilter.getPageSize())
+                .list();
 
         final Uni<Integer> numPages = query.pageCount();
         final Uni<Long> allData = query.count();
 
         return Uni.combine().all().unis(pagedData, numPages, allData)
-            .collectFailures()
-            .asTuple()
-            .map((Tuple3<List<EventService>, Integer, Long> tuple3) -> new Pagination<EventService>(
-                tuple3.getItem1(),
-                paginationFilter.getNumPage(),
-                paginationFilter.getPageSize(),
-                tuple3.getItem2(),
-                tuple3.getItem3().intValue()));
+                .collectFailures()
+                .asTuple()
+                .map((Tuple3<List<EventService>, Integer, Long> tuple3) -> new Pagination<EventService>(
+                        tuple3.getItem1(),
+                        paginationFilter.getNumPage(),
+                        paginationFilter.getPageSize(),
+                        tuple3.getItem2(),
+                        tuple3.getItem3().intValue()));
     }
 
     @Override
@@ -80,7 +80,10 @@ public class EventServiceRepository implements IEventServiceRepository {
 
     @Override
     public Uni<EventService> find(UUID id) {
-       return this.findById(id);
+        return this.findById(id)
+                .flatMap((EventService eventService) -> eventService == null
+                        ? Uni.createFrom().failure(new EventServiceNotFoundException(id))
+                        : Uni.createFrom().item(eventService));
     }
 
     @Override

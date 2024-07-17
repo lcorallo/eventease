@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.servament.dto.CreateOperationDTO;
 import org.servament.dto.OperationDTO;
+import org.servament.exception.EventServiceNotFoundException;
 import org.servament.model.Pagination;
 import org.servament.model.filter.PaginationFilter;
 import org.servament.service.EventOperationService;
@@ -21,6 +22,8 @@ import jakarta.validation.ValidatorFactory;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.InternalServerErrorException;
+import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -68,7 +71,10 @@ public class OperationResource {
                 .item(validator.validate(createOperationDTO))
                 .flatMap((Set<ConstraintViolation<CreateOperationDTO>> violations) -> !violations.isEmpty()
                         ? Uni.createFrom().failure(new BadRequestException(violations.iterator().next().getMessage()))
-                        : this.eventOperationService.create(createOperationDTO));
+                        : this.eventOperationService.create(createOperationDTO))
+                .onFailure().transform(f -> f instanceof EventServiceNotFoundException
+                        ? new NotFoundException(f.getMessage())
+                        : new InternalServerErrorException(f.getMessage()));
 
     }
 

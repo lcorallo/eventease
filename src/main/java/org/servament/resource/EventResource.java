@@ -3,7 +3,12 @@ package org.servament.resource;
 import java.util.List;
 import java.util.UUID;
 
+import org.jboss.resteasy.reactive.RestResponse.Status;
+import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
+import org.servament.dto.ErrorResponseDTO;
 import org.servament.dto.EventDTO;
+import org.servament.exception.EventEaseException;
+import org.servament.exception.EventServiceNotFoundException;
 import org.servament.model.Pagination;
 import org.servament.model.filter.PaginationFilter;
 import org.servament.service.EventServiceService;
@@ -70,5 +75,14 @@ public class EventResource {
         throw new UnsupportedOperationException();
     }
 
+    @ServerExceptionMapper
+    public Response mapExecution(EventEaseException e) {
+        ErrorResponseDTO error = new ErrorResponseDTO(e.getErrorCode(), e.getMessage(), e.getCause() != null ? e.getCause().getMessage() : null);
+
+        if(e instanceof EventServiceNotFoundException) {
+            return Response.status(Status.NOT_FOUND).entity(error).build();
+        }
+        return Response.status(Status.INTERNAL_SERVER_ERROR).entity(error).build();
+    }
 
 }

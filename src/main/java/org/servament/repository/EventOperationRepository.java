@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.servament.entity.EventOperation;
+import org.servament.exception.EventOperationNotFoundException;
 import org.servament.model.EventStatus;
 import org.servament.model.Pagination;
 import org.servament.model.filter.EventOperationFilter;
@@ -80,7 +81,10 @@ public class EventOperationRepository implements IEventOperationRepository {
 
     @Override
     public Uni<EventOperation> find(UUID id) {
-        return this.findById(id);
+        return this.findById(id)
+            .flatMap((EventOperation eventOperation) -> eventOperation == null
+                        ? Uni.createFrom().failure(new EventOperationNotFoundException(id))
+                        : Uni.createFrom().item(eventOperation));
     }
 
     @Override

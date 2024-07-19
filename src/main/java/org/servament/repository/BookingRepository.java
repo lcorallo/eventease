@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.servament.entity.Booking;
+import org.servament.exception.BookingNotFoundException;
 import org.servament.model.BookingStatus;
 import org.servament.model.Pagination;
 import org.servament.model.filter.BookingFilter;
@@ -74,7 +75,10 @@ public class BookingRepository implements IBookingRepository {
 
     @Override
     public Uni<Booking> find(Long id) {
-        return this.findById(id);
+        return this.findById(id)
+                    .flatMap((Booking eventService) -> eventService == null
+                    ? Uni.createFrom().failure(new BookingNotFoundException(id))
+                    : Uni.createFrom().item(eventService));
     }
 
     @Override

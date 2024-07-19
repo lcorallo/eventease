@@ -9,6 +9,7 @@ import org.servament.dto.CreateOperationDTO;
 import org.servament.dto.ErrorResponseDTO;
 import org.servament.dto.OperationDTO;
 import org.servament.exception.EventEaseException;
+import org.servament.exception.EventOperationIllegalInputException;
 import org.servament.exception.EventOperationNotFoundException;
 import org.servament.exception.EventServiceNotFoundException;
 import org.servament.model.Pagination;
@@ -69,17 +70,7 @@ public class OperationResource {
     @POST
     @Path("/operation")
     public Uni<OperationDTO> create(CreateOperationDTO createOperationDTO) {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
-
-        return Uni.createFrom()
-                .item(validator.validate(createOperationDTO))
-                .flatMap((Set<ConstraintViolation<CreateOperationDTO>> violations) -> !violations.isEmpty()
-                        ? Uni.createFrom().failure(new BadRequestException(violations.iterator().next().getMessage()))
-                        : this.eventOperationService.create(createOperationDTO))
-                .onFailure().transform(f -> f instanceof EventServiceNotFoundException
-                        ? new NotFoundException(f.getMessage())
-                        : new InternalServerErrorException(f.getMessage()));
+        return this.eventOperationService.create(createOperationDTO);
 
     }
 
@@ -99,7 +90,10 @@ public class OperationResource {
     public Response mapExecution(EventEaseException e) {
         ErrorResponseDTO error = new ErrorResponseDTO(e.getErrorCode(), e.getMessage(), e.getCause() != null ? e.getCause().getMessage() : null);
 
-        if(e instanceof EventOperationNotFoundException) {
+        if(e instanceof EventOperationIllegalInputException) {
+            return Response.status(Status.BAD_REQUEST).entity(error).build();
+        }
+        if(e instanceof EventOperationNotFoundException || e instanceof EventServiceNotFoundException) {
             return Response.status(Status.NOT_FOUND).entity(error).build();
         }
         return Response.status(Status.INTERNAL_SERVER_ERROR).entity(error).build();

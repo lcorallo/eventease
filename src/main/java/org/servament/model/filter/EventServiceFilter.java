@@ -14,7 +14,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class EventServiceFilter extends EventFIlter {
+public class EventServiceFilter extends EventFilter {
 
     private Set<String> codes;
 

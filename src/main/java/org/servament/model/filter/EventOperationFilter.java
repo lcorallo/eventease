@@ -13,7 +13,7 @@ import lombok.Setter;
 
 @NoArgsConstructor
 @AllArgsConstructor
-public class EventOperationFilter extends EventFIlter {
+public class EventOperationFilter extends EventFilter {
 
     private Set<UUID> eventServiceIds;
     

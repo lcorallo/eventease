@@ -15,7 +15,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public abstract class EventFIlter extends BaseFilter {
+public abstract class EventFilter extends BaseFilter {
 
     private Set<EventStatus> statuses;
 

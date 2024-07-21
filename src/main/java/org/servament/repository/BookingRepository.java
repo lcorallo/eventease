@@ -94,7 +94,7 @@ public class BookingRepository implements IBookingRepository {
     }
 
     @Override
-    public Uni<Boolean> remove(Long id) {
+    public Uni<Void> remove(Long id) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'remove'");
     }

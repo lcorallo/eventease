@@ -89,8 +89,7 @@ public class EventOperationRepository implements IEventOperationRepository {
 
     @Override
     public Uni<EventOperation> create(EventOperation incomingEntity) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'create'");
+        return this.persist(incomingEntity);
     }
 
     @Override
@@ -100,9 +99,12 @@ public class EventOperationRepository implements IEventOperationRepository {
     }
 
     @Override
-    public Uni<Boolean> remove(UUID id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'remove'");
+    public Uni<Void> remove(UUID id) {
+        return this.findById(id)
+            .flatMap((EventOperation eventOperation) -> eventOperation == null
+                        ? Uni.createFrom().failure(new EventOperationNotFoundException(id))
+                        : this.delete(eventOperation)
+            );
     }
 
 }

@@ -51,7 +51,7 @@ public class EventServiceService {
 
         Uni<EventDTO> createEvent = Uni.createFrom().item(createEventDTO)
             .map(EventServiceMapper.INSTANCE::toEntity)
-            .flatMap(this.eventServiceRepository::persist)
+            .flatMap(this.eventServiceRepository::create)
             .map(EventServiceMapper.INSTANCE::toDTO);
 
         return Uni.createFrom().item(validator.validate(createEventDTO))

@@ -65,7 +65,7 @@ public class EventOperationService {
                 .collectFailures()
                 .asTuple())
             .map((Tuple2<CreateOperationDTO, EventService> tuple) -> EventOperationMapper.INSTANCE.toEntity(tuple.getItem1(), tuple.getItem2()))
-            .flatMap(this.eventOperationRepository::persist)
+            .flatMap(this.eventOperationRepository::create)
             .map(EventOperationMapper.INSTANCE::toDTO);
 
         

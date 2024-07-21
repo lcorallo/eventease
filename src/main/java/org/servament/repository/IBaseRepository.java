@@ -49,7 +49,6 @@ public interface IBaseRepository<K, V, T> extends PanacheRepositoryBase<K, V>{
      * Implementation of the {@link PanacheRepositoryBase#deleteById} method
      * It will be implemented in order to be mandatorily defined
      * @param id    the id of the entity K entity to be deleted
-     * @return      the outcome of the operation
      */
-    Uni<Boolean> remove(V id);
+    Uni<Void> remove(V id);
 }

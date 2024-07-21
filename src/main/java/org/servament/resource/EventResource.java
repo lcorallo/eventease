@@ -5,9 +5,12 @@ import java.util.UUID;
 
 import org.jboss.resteasy.reactive.RestResponse.Status;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
+import org.servament.dto.CreateEventDTO;
 import org.servament.dto.ErrorResponseDTO;
 import org.servament.dto.EventDTO;
 import org.servament.exception.EventEaseException;
+import org.servament.exception.EventOperationIllegalInputException;
+import org.servament.exception.EventOperationNotFoundException;
 import org.servament.exception.EventServiceNotFoundException;
 import org.servament.model.Pagination;
 import org.servament.model.filter.PaginationFilter;
@@ -17,6 +20,7 @@ import io.quarkus.hibernate.reactive.panache.common.WithSession;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PATCH;
@@ -33,8 +37,12 @@ import jakarta.ws.rs.core.Response;
 @WithSession
 public class EventResource {
     
+    private final EventServiceService eventServiceService;
+
     @Inject
-    private EventServiceService eventServiceService;
+    public EventResource(EventServiceService eventServiceService) {
+        this.eventServiceService = eventServiceService;
+    }
 
     @GET
     @Path("/events")
@@ -59,8 +67,9 @@ public class EventResource {
     
     @POST
     @Path("/event")
-    public Uni<EventDTO> create() {
-        throw new UnsupportedOperationException();
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Uni<EventDTO> create(CreateEventDTO createEventDTO) {
+        return this.eventServiceService.create(createEventDTO);
     }
 
     @PATCH
@@ -78,8 +87,11 @@ public class EventResource {
     @ServerExceptionMapper
     public Response mapExecution(EventEaseException e) {
         ErrorResponseDTO error = new ErrorResponseDTO(e.getErrorCode(), e.getMessage(), e.getCause() != null ? e.getCause().getMessage() : null);
-
-        if(e instanceof EventServiceNotFoundException) {
+        
+        if(e instanceof EventOperationIllegalInputException) {
+            return Response.status(Status.BAD_REQUEST).entity(error).build();
+        }
+        if(e instanceof EventServiceNotFoundException || e instanceof EventOperationNotFoundException) {
             return Response.status(Status.NOT_FOUND).entity(error).build();
         }
         return Response.status(Status.INTERNAL_SERVER_ERROR).entity(error).build();

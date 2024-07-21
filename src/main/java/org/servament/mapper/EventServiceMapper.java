@@ -9,6 +9,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
+import org.servament.dto.CreateEventDTO;
 import org.servament.dto.EventDTO;
 import org.servament.entity.EventOperation;
 import org.servament.entity.EventService;
@@ -36,10 +37,10 @@ public interface EventServiceMapper {
     @Mapping(source = "supplier", target = "supplier")
     @Mapping(source = "availability", target = "availability")
     @Mapping(target = "operations", source = "event.operations", qualifiedByName = "operationsId")
-    EventDTO toPartialDTO(EventService event);
+    EventDTO toDTO(EventService event);
 
     @Named("toDTOs")
-    List<EventDTO> toPartialDTOs(List<EventService> event);
+    List<EventDTO> toDTOs(List<EventService> event);
     
     @Mapping(source = "page", target = "page")    
     @Mapping(source = "size", target = "size")    
@@ -47,4 +48,22 @@ public interface EventServiceMapper {
     @Mapping(source = "totalSize", target = "totalSize")
     @Mapping(source = "data", target = "data", qualifiedByName = "toDTOs")    
     Pagination<EventDTO> toPaginationDTO(Pagination<EventService> pagination);
+
+    
+    @Mapping(target = "id", ignore = true)
+    @Mapping(source = "createEventDTO.activity", target = "activity")
+    @Mapping(source = "createEventDTO.startDateTime", target = "startDateTime")
+    @Mapping(source = "createEventDTO.estimatedEndDateTime", target = "estimatedEndDateTime")
+    @Mapping(source = "createEventDTO.endDateTime", target = "endDateTime")
+    @Mapping(target = "status", constant = "DRAFT")
+    @Mapping(source = "createEventDTO.note", target = "note")
+    @Mapping(source = "createEventDTO.location", target = "location")
+    @Mapping(source = "createEventDTO.supplier", target = "supplier")
+    @Mapping(source = "createEventDTO.code", target = "code")
+    @Mapping(source = "createEventDTO.availability", target = "availability")
+    @Mapping(target = "operations", ignore = true)
+    @Mapping(target = "bookings", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updateAt", ignore = true)
+    EventService toEntity(CreateEventDTO createEventDTO);
 }

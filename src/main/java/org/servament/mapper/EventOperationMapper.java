@@ -51,6 +51,8 @@ public interface EventOperationMapper {
     @Mapping(source = "createOperationDTO.operator", target = "operator")
     @Mapping(source = "createOperationDTO.partecipants", target = "partecipants")
     @Mapping(source = "event", target = "event")
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updateAt", ignore = true)
     EventOperation toEntity(CreateOperationDTO createOperationDTO, EventService event);
 
 }

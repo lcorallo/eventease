@@ -1,7 +1,6 @@
 package org.servament.resource;
 
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
@@ -20,15 +19,9 @@ import io.quarkus.hibernate.reactive.panache.common.WithSession;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
-import jakarta.validation.ValidatorFactory;
-import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
-import jakarta.ws.rs.InternalServerErrorException;
-import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -69,6 +62,7 @@ public class OperationResource {
 
     @POST
     @Path("/operation")
+    @Consumes(MediaType.APPLICATION_JSON)
     public Uni<OperationDTO> create(CreateOperationDTO createOperationDTO) {
         return this.eventOperationService.create(createOperationDTO);
 

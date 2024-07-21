@@ -1,16 +1,13 @@
 package org.servament.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
 import org.servament.dto.CreateOperationDTO;
 import org.servament.dto.OperationDTO;
-import org.servament.entity.EventOperation;
 import org.servament.entity.EventService;
 import org.servament.exception.EventOperationIllegalInputException;
-import org.servament.exception.EventServiceNotFoundException;
 import org.servament.mapper.EventOperationMapper;
 import org.servament.model.Pagination;
 import org.servament.model.filter.EventOperationFilter;
@@ -68,7 +65,7 @@ public class EventOperationService {
                 .collectFailures()
                 .asTuple())
             .map((Tuple2<CreateOperationDTO, EventService> tuple) -> EventOperationMapper.INSTANCE.toEntity(tuple.getItem1(), tuple.getItem2()))
-            .flatMap((EventOperation eventOperation) -> this.eventOperationRepository.persist(eventOperation))
+            .flatMap(this.eventOperationRepository::persist)
             .map(EventOperationMapper.INSTANCE::toDTO);
 
         
@@ -79,7 +76,7 @@ public class EventOperationService {
                         violations.iterator().next().getMessage())
                         )
                     : createOperation
-                );           
+                );
     }
 
 }

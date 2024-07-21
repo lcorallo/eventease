@@ -1,6 +1,7 @@
 package org.servament.model.filter;
 
 import java.util.Set;
+import java.util.UUID;
 
 import org.servament.model.EventStatus;
 
@@ -18,5 +19,7 @@ import lombok.Setter;
 public abstract class EventFilter extends BaseFilter {
 
     private Set<EventStatus> statuses;
+
+    private Set<UUID> activity;
 
 }

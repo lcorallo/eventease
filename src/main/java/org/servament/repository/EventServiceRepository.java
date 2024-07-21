@@ -43,6 +43,11 @@ public class EventServiceRepository implements IEventServiceRepository {
                 strBuilder.append(" and supplier IN :suppliers");
             }
 
+            if (filter.getActivity() != null && !filter.getActivity().isEmpty()) {
+                params.put("activities", filter.getActivity());
+                strBuilder.append(" and activity IN :activities");
+            }
+
             if (strBuilder.indexOf(" and", 0) == 0) {
                 strBuilder.replace(0, 4, "");
             }
@@ -75,7 +80,10 @@ public class EventServiceRepository implements IEventServiceRepository {
 
     @Override
     public Uni<List<EventService>> list(EventServiceFilter filter) {
-        return this.buildFetchQuery(filter).list();
+        return this.buildFetchQuery(filter).range(
+            filter.getOffset(),
+            filter.getLimit() + filter.getOffset() - 1
+        ).list();
     }
 
     @Override

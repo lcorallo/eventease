@@ -1,6 +1,7 @@
 package org.servament.resource;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.jboss.resteasy.reactive.RestResponse.Status;
@@ -12,7 +13,9 @@ import org.servament.exception.EventEaseException;
 import org.servament.exception.EventOperationIllegalInputException;
 import org.servament.exception.EventOperationNotFoundException;
 import org.servament.exception.EventServiceNotFoundException;
+import org.servament.model.EventStatus;
 import org.servament.model.Pagination;
+import org.servament.model.filter.EventServiceFilter;
 import org.servament.model.filter.PaginationFilter;
 import org.servament.service.EventServiceService;
 
@@ -28,6 +31,7 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
@@ -46,8 +50,22 @@ public class EventResource {
 
     @GET
     @Path("/events")
-    public Uni<List<EventDTO>> list() {
-        return this.eventServiceService.list(null);
+    public Uni<List<EventDTO>> list(
+        @QueryParam("codes") Set<String> codes,
+        @QueryParam("activities") Set<UUID> activities,
+        @QueryParam("suppliers") Set<UUID> suppliers,
+        @QueryParam("statuses") Set<EventStatus> statuses,
+        @QueryParam("limit") Integer limit,
+        @QueryParam("offset") Integer offset
+    ) {
+        EventServiceFilter filter = new EventServiceFilter();
+        filter.setCodes(codes);
+        filter.setActivity(activities);
+        filter.setSuppliers(suppliers);
+        filter.setStatuses(statuses);
+        filter.setLimit(limit);
+        filter.setOffset(offset);
+        return this.eventServiceService.list(filter);
     }
 
     @GET

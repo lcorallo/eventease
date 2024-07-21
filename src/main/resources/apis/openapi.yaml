@@ -106,6 +106,11 @@ paths:
     post:
       tags:
       - Event Resource
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateEventDTO"
       responses:
         "200":
           description: OK
@@ -117,6 +122,49 @@ paths:
     get:
       tags:
       - Event Resource
+      parameters:
+      - name: activities
+        in: query
+        schema:
+          uniqueItems: true
+          type: array
+          items:
+            format: uuid
+            pattern: "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}"
+            type: string
+      - name: codes
+        in: query
+        schema:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+      - name: limit
+        in: query
+        schema:
+          format: int32
+          type: integer
+      - name: offset
+        in: query
+        schema:
+          format: int32
+          type: integer
+      - name: statuses
+        in: query
+        schema:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: "#/components/schemas/EventStatus"
+      - name: suppliers
+        in: query
+        schema:
+          uniqueItems: true
+          type: array
+          items:
+            format: uuid
+            pattern: "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}"
+            type: string
       responses:
         "200":
           description: OK
@@ -186,6 +234,11 @@ paths:
     post:
       tags:
       - Operation Resource
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateOperationDTO"
       responses:
         "200":
           description: OK
@@ -289,6 +342,61 @@ components:
       - REJECTED
       - CANCELLED
       type: string
+    CreateEventDTO:
+      required:
+      - activity
+      - code
+      - supplier
+      type: object
+      properties:
+        activity:
+          $ref: "#/components/schemas/UUID"
+        startDateTime:
+          $ref: "#/components/schemas/Instant"
+        estimatedEndDateTime:
+          $ref: "#/components/schemas/Instant"
+        endDateTime:
+          $ref: "#/components/schemas/Instant"
+        note:
+          maxLength: 1000
+          type: string
+        location:
+          $ref: "#/components/schemas/UUID"
+        code:
+          pattern: \S
+          type: string
+        supplier:
+          $ref: "#/components/schemas/UUID"
+        availability:
+          format: int32
+          type: integer
+    CreateOperationDTO:
+      required:
+      - event
+      - activity
+      - operator
+      type: object
+      properties:
+        event:
+          $ref: "#/components/schemas/UUID"
+        activity:
+          $ref: "#/components/schemas/UUID"
+        startDateTime:
+          $ref: "#/components/schemas/Instant"
+        estimatedEndDateTime:
+          $ref: "#/components/schemas/Instant"
+        endDateTime:
+          $ref: "#/components/schemas/Instant"
+        note:
+          maxLength: 1000
+          type: string
+        location:
+          $ref: "#/components/schemas/UUID"
+        operator:
+          $ref: "#/components/schemas/UUID"
+        partecipants:
+          format: int32
+          type: integer
     EventDTO:
       type: object
       properties:

@@ -60,7 +60,7 @@ public class EventResource {
     ) {
         EventServiceFilter filter = new EventServiceFilter();
         filter.setCodes(codes);
-        filter.setActivity(activities);
+        filter.setActivities(activities);
         filter.setSuppliers(suppliers);
         filter.setStatuses(statuses);
         filter.setLimit(limit);

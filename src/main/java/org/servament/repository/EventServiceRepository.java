@@ -43,8 +43,8 @@ public class EventServiceRepository implements IEventServiceRepository {
                 strBuilder.append(" and supplier IN :suppliers");
             }
 
-            if (filter.getActivity() != null && !filter.getActivity().isEmpty()) {
-                params.put("activities", filter.getActivity());
+            if (filter.getActivities() != null && !filter.getActivities().isEmpty()) {
+                params.put("activities", filter.getActivities());
                 strBuilder.append(" and activity IN :activities");
             }
 

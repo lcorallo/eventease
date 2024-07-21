@@ -45,6 +45,11 @@ public class EventOperationRepository implements IEventOperationRepository {
                 params.put("operators", filter.getOperators());
                 strBuilder.append(" and operator IN :operators");
             }
+
+            if (filter.getActivities() != null && !filter.getActivities().isEmpty()) {
+                params.put("activities", filter.getActivities());
+                strBuilder.append(" and activity IN :activities");
+            }
     
             if(strBuilder.indexOf(" and", 0) == 0) {
                 strBuilder.replace(0, 4, "");
@@ -78,7 +83,10 @@ public class EventOperationRepository implements IEventOperationRepository {
 
     @Override
     public Uni<List<EventOperation>> list(EventOperationFilter filter) {
-        return this.buildFetchQuery(filter).list();
+        return this.buildFetchQuery(filter).range(
+            filter.getOffset(),
+            filter.getLimit() + filter.getOffset() - 1
+        ).list();
     }
 
     @Override

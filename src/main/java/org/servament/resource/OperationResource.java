@@ -1,6 +1,7 @@
 package org.servament.resource;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
@@ -11,7 +12,9 @@ import org.servament.exception.EventEaseException;
 import org.servament.exception.EventOperationIllegalInputException;
 import org.servament.exception.EventOperationNotFoundException;
 import org.servament.exception.EventServiceNotFoundException;
+import org.servament.model.EventStatus;
 import org.servament.model.Pagination;
+import org.servament.model.filter.EventOperationFilter;
 import org.servament.model.filter.PaginationFilter;
 import org.servament.service.EventOperationService;
 
@@ -27,6 +30,7 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -46,8 +50,22 @@ public class OperationResource {
 
     @GET
     @Path("/operations")
-    public Uni<List<OperationDTO>> list() {
-        return this.eventOperationService.list(null);
+    public Uni<List<OperationDTO>> list(
+        @QueryParam("events") Set<UUID> events,
+        @QueryParam("activities") Set<UUID> activities,
+        @QueryParam("operators") Set<UUID> operators,
+        @QueryParam("statuses") Set<EventStatus> statuses,
+        @QueryParam("limit") Integer limit,
+        @QueryParam("offset") Integer offset
+    ) {
+        EventOperationFilter filter = new EventOperationFilter();
+        filter.setEventServiceIds(events);
+        filter.setActivities(activities);
+        filter.setOperators(operators);
+        filter.setStatuses(statuses);
+        filter.setLimit(limit);
+        filter.setOffset(offset);
+        return this.eventOperationService.list(filter);
     }
 
     @GET

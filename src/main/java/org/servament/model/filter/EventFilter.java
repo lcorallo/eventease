@@ -20,6 +20,6 @@ public abstract class EventFilter extends BaseFilter {
 
     private Set<EventStatus> statuses;
 
-    private Set<UUID> activity;
+    private Set<UUID> activities;
 
 }

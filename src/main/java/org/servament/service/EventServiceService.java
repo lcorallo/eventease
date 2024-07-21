@@ -63,5 +63,10 @@ public class EventServiceService {
                 : createEvent
             );
     }
+
+    @WithTransaction
+    public Uni<Void> remove(UUID id) {
+        return this.eventServiceRepository.remove(id);
+    }
     
 }

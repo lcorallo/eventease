@@ -4,8 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.servament.entity.EventOperation;
+import org.servament.entity.EventService;
 import org.servament.exception.EventOperationNotFoundException;
 import org.servament.model.EventStatus;
 import org.servament.model.Pagination;
@@ -103,7 +105,18 @@ public class EventOperationRepository implements IEventOperationRepository {
         return this.findById(id)
             .flatMap((EventOperation eventOperation) -> eventOperation == null
                         ? Uni.createFrom().failure(new EventOperationNotFoundException(id))
-                        : this.delete(eventOperation)
+                        : Uni.createFrom().item(eventOperation)
+                            .map((EventOperation eventOps) -> {
+                                EventService eventParent = eventOps.getEvent();
+                                List<EventOperation> newEventOperations = eventParent
+                                        .getOperations()
+                                        .stream()
+                                        .filter((EventOperation ops) -> !ops.getId().equals(eventOperation.getId()))
+                                        .collect(Collectors.toList());
+                                eventParent.setOperations(newEventOperations);                            
+                                return eventOps;
+                            })
+                            .flatMap(this::delete)
             );
     }
 

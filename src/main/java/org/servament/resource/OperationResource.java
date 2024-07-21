@@ -37,8 +37,12 @@ import jakarta.ws.rs.core.Response.Status;
 @WithSession
 public class OperationResource {
 
+    private final EventOperationService eventOperationService;
+
     @Inject
-    private EventOperationService eventOperationService;
+    public OperationResource(EventOperationService eventOperationService) {
+        this.eventOperationService = eventOperationService;
+    }
 
     @GET
     @Path("/operations")
@@ -77,7 +81,8 @@ public class OperationResource {
     @DELETE
     @Path("/operations/{id}")
     public Uni<Response> remove(@PathParam("id") UUID id) {
-        throw new UnsupportedOperationException();
+        return this.eventOperationService.remove(id)
+            .map(t -> Response.noContent().build());
     }
 
     @ServerExceptionMapper

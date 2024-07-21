@@ -79,4 +79,8 @@ public class EventOperationService {
                 );
     }
 
+    @WithTransaction
+    public Uni<Void> remove(UUID id) {
+        return this.eventOperationRepository.remove(id);
+    }
 }

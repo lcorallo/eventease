@@ -81,7 +81,8 @@ public class EventResource {
     @DELETE
     @Path("/events/{id}")
     public Uni<Response> remove(@PathParam("id") UUID id) {
-        throw new UnsupportedOperationException();
+        return this.eventServiceService.remove(id)
+            .map(t -> Response.noContent().build());
     }
 
     @ServerExceptionMapper

@@ -87,11 +87,6 @@ public class BookingRepository implements IBookingRepository {
         throw new UnsupportedOperationException("Unimplemented method 'create'");
     }
 
-    @Override
-    public Uni<Boolean> update(Long id, Booking incomingEntity) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
-    }
 
     @Override
     public Uni<Void> remove(Long id) {

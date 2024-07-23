@@ -103,11 +103,6 @@ public class EventOperationRepository implements IEventOperationRepository {
     }
 
     @Override
-    public Uni<Boolean> update(UUID id, EventOperation incomingEntity) {
-        return this.update(id, incomingEntity);
-    }
-
-    @Override
     public Uni<Void> remove(UUID id) {
         return this.findById(id)
             .flatMap((EventOperation eventOperation) -> eventOperation == null

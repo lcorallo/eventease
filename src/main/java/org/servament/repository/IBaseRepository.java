@@ -43,8 +43,6 @@ public interface IBaseRepository<K, V, T> extends PanacheRepositoryBase<K, V>{
      */
     Uni<K> create(K incomingEntity);
 
-    Uni<Boolean> update(V id, K incomingEntity);
-
     /**
      * Implementation of the {@link PanacheRepositoryBase#deleteById} method
      * It will be implemented in order to be mandatorily defined

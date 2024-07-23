@@ -100,12 +100,6 @@ public class EventServiceRepository implements IEventServiceRepository {
     }
 
     @Override
-    public Uni<Boolean> update(UUID id, EventService incomingEntity) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
-    }
-
-    @Override
     public Uni<Void> remove(UUID id) {
         return this.findById(id)
             .flatMap((EventService eventService) -> eventService == null

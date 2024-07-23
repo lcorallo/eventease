@@ -9,6 +9,7 @@ import org.servament.dto.OperationDTO;
 import org.servament.dto.UpdateOperationDTO;
 import org.servament.entity.EventOperation;
 import org.servament.entity.EventService;
+import org.servament.exception.EventEaseException;
 import org.servament.exception.EventOperationIllegalInputException;
 import org.servament.exception.EventOperationUpdateException;
 import org.servament.mapper.EventOperationMapper;
@@ -139,20 +140,12 @@ public class EventOperationService {
                 if(incomingUpdateOperationDTO.getStatus() != null)
                     persistedEventOperation.setStatus(incomingUpdateOperationDTO.getStatus());
                     
-                return persistedEventOperation;
+                return EventOperationMapper.INSTANCE.toDTO(persistedEventOperation);
             })
-            .flatMap((EventOperation eventOperation) -> Uni.combine().all().unis(
-                    Uni.createFrom().item(EventOperationMapper.INSTANCE.toDTO(eventOperation)),
-                    this.eventOperationRepository.update(id, eventOperation)
-                )
-                .collectFailures()
-                .asTuple()
-            )
-            .map((Tuple2<OperationDTO, Boolean> tuple2) -> {
-                if(Boolean.TRUE.equals(tuple2.getItem2()))
-                    return tuple2.getItem1();
-                throw new EventOperationUpdateException(id);
-            });
+            .onFailure().transform(e -> e instanceof EventEaseException
+                ? e
+                : new EventOperationUpdateException(id, e.getCause())
+            );
     }
 
     @WithTransaction

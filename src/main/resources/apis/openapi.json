@@ -488,11 +488,24 @@
             "$ref" : "#/components/schemas/UUID"
           }
         } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UpdateOperationDTO"
+              }
+            }
+          }
+        },
         "responses" : {
           "200" : {
             "description" : "OK",
             "content" : {
-              "application/json" : { }
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/OperationDTO"
+                }
+              }
             }
           }
         }
@@ -801,6 +814,43 @@
         "format" : "uuid",
         "pattern" : "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}",
         "type" : "string"
+      },
+      "UpdateOperationDTO" : {
+        "type" : "object",
+        "properties" : {
+          "event" : {
+            "$ref" : "#/components/schemas/UUID"
+          },
+          "activity" : {
+            "$ref" : "#/components/schemas/UUID"
+          },
+          "startDateTime" : {
+            "$ref" : "#/components/schemas/Instant"
+          },
+          "estimatedEndDateTime" : {
+            "$ref" : "#/components/schemas/Instant"
+          },
+          "endDateTime" : {
+            "$ref" : "#/components/schemas/Instant"
+          },
+          "note" : {
+            "maxLength" : 1000,
+            "type" : "string"
+          },
+          "location" : {
+            "$ref" : "#/components/schemas/UUID"
+          },
+          "operator" : {
+            "$ref" : "#/components/schemas/UUID"
+          },
+          "partecipants" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "status" : {
+            "$ref" : "#/components/schemas/EventStatus"
+          }
+        }
       }
     }
   }

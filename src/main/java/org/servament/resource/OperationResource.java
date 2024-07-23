@@ -8,6 +8,7 @@ import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 import org.servament.dto.CreateOperationDTO;
 import org.servament.dto.ErrorResponseDTO;
 import org.servament.dto.OperationDTO;
+import org.servament.dto.UpdateOperationDTO;
 import org.servament.exception.EventEaseException;
 import org.servament.exception.EventOperationIllegalInputException;
 import org.servament.exception.EventOperationNotFoundException;
@@ -92,8 +93,9 @@ public class OperationResource {
 
     @PATCH
     @Path("/operations/{id}")
-    public Uni<Response> update(@PathParam("id") UUID id) {
-        throw new UnsupportedOperationException();
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Uni<OperationDTO> update(@PathParam("id") UUID id, UpdateOperationDTO updateOperationDTO) {
+        return this.eventOperationService.patch(id, updateOperationDTO);
     }
 
     @DELETE

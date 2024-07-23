@@ -104,8 +104,7 @@ public class EventOperationRepository implements IEventOperationRepository {
 
     @Override
     public Uni<Boolean> update(UUID id, EventOperation incomingEntity) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+        return this.update(id, incomingEntity);
     }
 
     @Override

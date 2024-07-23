@@ -6,8 +6,11 @@ import java.util.UUID;
 
 import org.servament.dto.CreateOperationDTO;
 import org.servament.dto.OperationDTO;
+import org.servament.dto.UpdateOperationDTO;
+import org.servament.entity.EventOperation;
 import org.servament.entity.EventService;
 import org.servament.exception.EventOperationIllegalInputException;
+import org.servament.exception.EventOperationUpdateException;
 import org.servament.mapper.EventOperationMapper;
 import org.servament.model.Pagination;
 import org.servament.model.filter.EventOperationFilter;
@@ -18,6 +21,7 @@ import org.servament.repository.IEventServiceRepository;
 import io.quarkus.hibernate.reactive.panache.common.WithTransaction;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.tuples.Tuple2;
+import io.smallrye.mutiny.tuples.Tuple3;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.ConstraintViolation;
@@ -77,6 +81,78 @@ public class EventOperationService {
                         )
                     : createOperation
                 );
+    }
+
+    @WithTransaction
+    public Uni<OperationDTO> patch(UUID id, UpdateOperationDTO updateOperationDTO) {
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
+
+        return Uni.createFrom().item(validator.validate(updateOperationDTO))
+            .flatMap((Set<ConstraintViolation<UpdateOperationDTO>> violations) -> !violations.isEmpty()
+                ? Uni.createFrom().failure(new EventOperationIllegalInputException(
+                    violations.iterator().next().getPropertyPath().toString(),
+                    violations.iterator().next().getMessage())
+                    )
+                : Uni.createFrom().item(updateOperationDTO)
+            )
+            .flatMap((UpdateOperationDTO incomingUpdateOperationDTO) -> Uni.combine().all().unis(
+                    Uni.createFrom().item(incomingUpdateOperationDTO),
+                    this.eventOperationRepository.find(id),
+                    incomingUpdateOperationDTO.getEvent() != null ? this.eventServiceRepository.find(incomingUpdateOperationDTO.getEvent()) : Uni.createFrom().nullItem()
+                )
+                .collectFailures()
+                .asTuple()
+            )
+            .map((Tuple3<UpdateOperationDTO, EventOperation, EventService> tuple3) -> {
+                UpdateOperationDTO incomingUpdateOperationDTO = tuple3.getItem1();
+                EventOperation persistedEventOperation = tuple3.getItem2();
+                EventService persistedEventService = tuple3.getItem3();
+
+                if(incomingUpdateOperationDTO.getEvent() != null)
+                    persistedEventOperation.setEvent(persistedEventService);
+
+                if(incomingUpdateOperationDTO.getActivity() != null)
+                    persistedEventOperation.setActivity(incomingUpdateOperationDTO.getActivity());
+
+                if(incomingUpdateOperationDTO.getStartDateTime() != null)
+                    persistedEventOperation.setStartDateTime(incomingUpdateOperationDTO.getStartDateTime());
+
+                if(incomingUpdateOperationDTO.getEstimatedEndDateTime() != null)
+                    persistedEventOperation.setEstimatedEndDateTime(incomingUpdateOperationDTO.getEstimatedEndDateTime());
+
+                if(incomingUpdateOperationDTO.getEndDateTime() != null)
+                    persistedEventOperation.setEndDateTime(incomingUpdateOperationDTO.getEndDateTime());
+
+                if(incomingUpdateOperationDTO.getNote() != null)
+                    persistedEventOperation.setNote(incomingUpdateOperationDTO.getNote());
+
+                if(incomingUpdateOperationDTO.getLocation() != null)
+                    persistedEventOperation.setLocation(incomingUpdateOperationDTO.getLocation());
+
+                if(incomingUpdateOperationDTO.getOperator() != null)
+                    persistedEventOperation.setOperator(incomingUpdateOperationDTO.getOperator());
+
+                if(incomingUpdateOperationDTO.getPartecipants() != null)
+                    persistedEventOperation.setPartecipants(incomingUpdateOperationDTO.getPartecipants());
+
+                if(incomingUpdateOperationDTO.getStatus() != null)
+                    persistedEventOperation.setStatus(incomingUpdateOperationDTO.getStatus());
+                    
+                return persistedEventOperation;
+            })
+            .flatMap((EventOperation eventOperation) -> Uni.combine().all().unis(
+                    Uni.createFrom().item(EventOperationMapper.INSTANCE.toDTO(eventOperation)),
+                    this.eventOperationRepository.update(id, eventOperation)
+                )
+                .collectFailures()
+                .asTuple()
+            )
+            .map((Tuple2<OperationDTO, Boolean> tuple2) -> {
+                if(Boolean.TRUE.equals(tuple2.getItem2()))
+                    return tuple2.getItem1();
+                throw new EventOperationUpdateException(id);
+            });
     }
 
     @WithTransaction

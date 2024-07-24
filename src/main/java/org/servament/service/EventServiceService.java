@@ -65,13 +65,19 @@ public class EventServiceService {
             .map(EventServiceMapper.INSTANCE::toDTO);
 
         return Uni.createFrom().item(validator.validate(createEventDTO))
-            .flatMap((Set<ConstraintViolation<CreateEventDTO>> violations) -> !violations.isEmpty()
-                ? Uni.createFrom().failure(new EventServiceIllegalInputException(
-                    violations.iterator().next().getPropertyPath().toString(),
-                    violations.iterator().next().getMessage())
-                    )
-                : createEvent
-            );
+            .map((Set<ConstraintViolation<CreateEventDTO>> violations) -> {
+                if(!violations.isEmpty())
+                    throw new EventServiceIllegalInputException(
+                        violations.iterator().next().getPropertyPath().toString(),
+                        violations.iterator().next().getMessage()
+                    );
+                
+                if(createEventDTO.getStartDateTime().isAfter(createEventDTO.getEstimatedEndDateTime()))
+                    throw new EventServiceIllegalInputException("startDateTime_estimatedEndDateTime", "Start date time cannot be after estimated end time");
+            
+                return null;
+            })
+            .flatMap(ignore -> createEvent);
     }
 
     @WithTransaction
@@ -85,9 +91,16 @@ public class EventServiceService {
                     violations.iterator().next().getPropertyPath().toString(),
                     violations.iterator().next().getMessage())
                 )
-                : Uni.createFrom().item(updateEventDTO)
+                : Uni.createFrom().item(id)
             )
-            .flatMap(incomingUpdateEventDTO -> eventServiceRepository.find(id))
+            .flatMap(eventServiceRepository::find)
+            .map((EventService persistedEventService) -> {
+                Instant startDateTime = updateEventDTO.getStartDateTime() != null ? updateEventDTO.getStartDateTime() : persistedEventService.getStartDateTime();
+                Instant estimatedEndDateTime = updateEventDTO.getEstimatedEndDateTime() != null ? updateEventDTO.getEstimatedEndDateTime() : persistedEventService.getEstimatedEndDateTime();
+                if(startDateTime.isAfter(estimatedEndDateTime))
+                    throw new EventServiceIllegalInputException("startDateTime_estimatedEndDateTime", "Start date time cannot be after estimated end time");
+                return persistedEventService;
+            })
             .map((EventService persistedEventService) -> {
 
                 if(updateEventDTO.getActivity() != null)

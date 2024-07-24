@@ -1,19 +1,19 @@
 package org.servament.exception;
 
 public abstract class EventEaseException extends RuntimeException {
-    public EventEaseException() {
+    protected EventEaseException() {
         super();
     }
 
-    public EventEaseException(String message) {
+    protected EventEaseException(String message) {
         super(message);
     }
 
-    public EventEaseException(Throwable cause) {
+    protected EventEaseException(Throwable cause) {
         super(cause);
     }
 
-    public EventEaseException(String message, Throwable cause) {
+    protected EventEaseException(String message, Throwable cause) {
         super(message, cause);
     }
 

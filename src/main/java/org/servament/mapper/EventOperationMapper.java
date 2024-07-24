@@ -8,7 +8,6 @@ import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 import org.servament.dto.CreateOperationDTO;
 import org.servament.dto.OperationDTO;
-import org.servament.dto.UpdateOperationDTO;
 import org.servament.entity.EventOperation;
 import org.servament.entity.EventService;
 import org.servament.model.Pagination;

@@ -26,26 +26,26 @@ import lombok.Setter;
 @MappedSuperclass
 public class Event extends PanacheEntityBase {
 
-    @Column(name = "activity")
+    @Column(name = "activity", nullable = false)
     private UUID activity;
 
-    @Column(name = "start_datetime")
+    @Column(name = "start_datetime", nullable = false)
     private Instant startDateTime;
 
-    @Column(name = "estimated_end_datetime")
+    @Column(name = "estimated_end_datetime", nullable = false)
     private Instant estimatedEndDateTime;
 
-    @Column(name = "end_datetime")
+    @Column(name = "end_datetime", nullable = true)
     private Instant endDateTime;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     private EventStatus status;
 
-    @Column(name = "note", length = 1000)
+    @Column(name = "note", length = 1000, nullable = true)
     private String note;
 
-    @Column(name = "location")
+    @Column(name = "location", nullable = true)
     private UUID location;
 
     @CreationTimestamp

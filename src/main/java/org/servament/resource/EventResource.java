@@ -6,13 +6,18 @@ import java.util.UUID;
 
 import org.jboss.resteasy.reactive.RestResponse.Status;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
+import org.servament.dto.ClosingReasonDTO;
 import org.servament.dto.CreateEventDTO;
 import org.servament.dto.ErrorResponseDTO;
 import org.servament.dto.EventDTO;
+import org.servament.dto.UpdateEventDTO;
 import org.servament.exception.EventEaseException;
-import org.servament.exception.EventOperationIllegalInputException;
 import org.servament.exception.EventOperationNotFoundException;
+import org.servament.exception.EventServiceClosingException;
+import org.servament.exception.EventServiceCompletingException;
+import org.servament.exception.EventServiceIllegalInputException;
 import org.servament.exception.EventServiceNotFoundException;
+import org.servament.exception.EventServicePublicationException;
 import org.servament.model.EventStatus;
 import org.servament.model.Pagination;
 import org.servament.model.filter.EventServiceFilter;
@@ -82,6 +87,25 @@ public class EventResource {
     public Uni<EventDTO> findById(@PathParam("id") UUID id) {
         return this.eventServiceService.find(id);
     }
+
+    @POST
+    @Path("/events/{id}/publish")
+    public Uni<Void> publish(@PathParam("id") UUID id) {
+        return this.eventServiceService.publish(id);
+    }
+
+    @POST
+    @Path("/events/{id}/complete")
+    public Uni<Void> complete(@PathParam("id") UUID id) {
+        return this.eventServiceService.complete(id);
+    }
+
+    @POST
+    @Path("/events/{id}/close")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Uni<Void> close(@PathParam("id") UUID id, ClosingReasonDTO closingEventDTO) {
+        return this.eventServiceService.close(id, closingEventDTO);
+    }
     
     @POST
     @Path("/event")
@@ -92,8 +116,9 @@ public class EventResource {
 
     @PATCH
     @Path("/events/{id}")
-    public Uni<Response> update(@PathParam("id") UUID id) {
-        throw new UnsupportedOperationException();
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Uni<EventDTO> update(@PathParam("id") UUID id, UpdateEventDTO updateEventDTO) {
+        return this.eventServiceService.patch(id, updateEventDTO);
     }
 
     @DELETE
@@ -107,8 +132,11 @@ public class EventResource {
     public Response mapExecution(EventEaseException e) {
         ErrorResponseDTO error = new ErrorResponseDTO(e.getErrorCode(), e.getMessage(), e.getCause() != null ? e.getCause().getMessage() : null);
         
-        if(e instanceof EventOperationIllegalInputException) {
+        if(e instanceof EventServiceIllegalInputException) {
             return Response.status(Status.BAD_REQUEST).entity(error).build();
+        }
+        if(e instanceof EventServicePublicationException || e instanceof EventServiceClosingException || e instanceof EventServiceCompletingException) {
+            return Response.status(Status.FORBIDDEN).entity(error).build();
         }
         if(e instanceof EventServiceNotFoundException || e instanceof EventOperationNotFoundException) {
             return Response.status(Status.NOT_FOUND).entity(error).build();

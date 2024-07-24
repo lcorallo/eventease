@@ -94,58 +94,58 @@ public class EventOperationService {
                 ? Uni.createFrom().failure(new EventOperationIllegalInputException(
                     violations.iterator().next().getPropertyPath().toString(),
                     violations.iterator().next().getMessage())
-                    )
+                )
                 : Uni.createFrom().item(updateOperationDTO)
             )
-            .flatMap((UpdateOperationDTO incomingUpdateOperationDTO) -> Uni.combine().all().unis(
-                    Uni.createFrom().item(incomingUpdateOperationDTO),
-                    this.eventOperationRepository.find(id),
-                    incomingUpdateOperationDTO.getEvent() != null ? this.eventServiceRepository.find(incomingUpdateOperationDTO.getEvent()) : Uni.createFrom().nullItem()
-                )
-                .collectFailures()
-                .asTuple()
+            .flatMap(incomingUpdateOperationDTO -> eventOperationRepository.find(id)
+                .flatMap(persistedEventOperation -> {
+                    // Fetch event service if needed
+                    Uni<EventService> eventServiceUni = incomingUpdateOperationDTO.getEvent() != null
+                        ? eventServiceRepository.find(incomingUpdateOperationDTO.getEvent())
+                        : Uni.createFrom().nullItem();
+
+                    return eventServiceUni.map(persistedEventService -> {
+
+                        if(incomingUpdateOperationDTO.getEvent() != null)
+                            persistedEventOperation.setEvent(persistedEventService);
+    
+                        if(incomingUpdateOperationDTO.getActivity() != null)
+                            persistedEventOperation.setActivity(incomingUpdateOperationDTO.getActivity());
+        
+                        if(incomingUpdateOperationDTO.getStartDateTime() != null)
+                            persistedEventOperation.setStartDateTime(incomingUpdateOperationDTO.getStartDateTime());
+        
+                        if(incomingUpdateOperationDTO.getEstimatedEndDateTime() != null)
+                            persistedEventOperation.setEstimatedEndDateTime(incomingUpdateOperationDTO.getEstimatedEndDateTime());
+        
+                        if(incomingUpdateOperationDTO.getEndDateTime() != null)
+                            persistedEventOperation.setEndDateTime(incomingUpdateOperationDTO.getEndDateTime());
+        
+                        if(incomingUpdateOperationDTO.getNote() != null)
+                            persistedEventOperation.setNote(incomingUpdateOperationDTO.getNote());
+        
+                        if(incomingUpdateOperationDTO.getLocation() != null)
+                            persistedEventOperation.setLocation(incomingUpdateOperationDTO.getLocation());
+        
+                        if(incomingUpdateOperationDTO.getOperator() != null)
+                            persistedEventOperation.setOperator(incomingUpdateOperationDTO.getOperator());
+        
+                        if(incomingUpdateOperationDTO.getPartecipants() != null)
+                            persistedEventOperation.setPartecipants(incomingUpdateOperationDTO.getPartecipants());
+        
+                        if(incomingUpdateOperationDTO.getStatus() != null)
+                            persistedEventOperation.setStatus(incomingUpdateOperationDTO.getStatus());
+
+                        return persistedEventOperation;
+                    });
+                })
+                .map(EventOperationMapper.INSTANCE::toDTO)
             )
-            .map((Tuple3<UpdateOperationDTO, EventOperation, EventService> tuple3) -> {
-                UpdateOperationDTO incomingUpdateOperationDTO = tuple3.getItem1();
-                EventOperation persistedEventOperation = tuple3.getItem2();
-                EventService persistedEventService = tuple3.getItem3();
-
-                if(incomingUpdateOperationDTO.getEvent() != null)
-                    persistedEventOperation.setEvent(persistedEventService);
-
-                if(incomingUpdateOperationDTO.getActivity() != null)
-                    persistedEventOperation.setActivity(incomingUpdateOperationDTO.getActivity());
-
-                if(incomingUpdateOperationDTO.getStartDateTime() != null)
-                    persistedEventOperation.setStartDateTime(incomingUpdateOperationDTO.getStartDateTime());
-
-                if(incomingUpdateOperationDTO.getEstimatedEndDateTime() != null)
-                    persistedEventOperation.setEstimatedEndDateTime(incomingUpdateOperationDTO.getEstimatedEndDateTime());
-
-                if(incomingUpdateOperationDTO.getEndDateTime() != null)
-                    persistedEventOperation.setEndDateTime(incomingUpdateOperationDTO.getEndDateTime());
-
-                if(incomingUpdateOperationDTO.getNote() != null)
-                    persistedEventOperation.setNote(incomingUpdateOperationDTO.getNote());
-
-                if(incomingUpdateOperationDTO.getLocation() != null)
-                    persistedEventOperation.setLocation(incomingUpdateOperationDTO.getLocation());
-
-                if(incomingUpdateOperationDTO.getOperator() != null)
-                    persistedEventOperation.setOperator(incomingUpdateOperationDTO.getOperator());
-
-                if(incomingUpdateOperationDTO.getPartecipants() != null)
-                    persistedEventOperation.setPartecipants(incomingUpdateOperationDTO.getPartecipants());
-
-                if(incomingUpdateOperationDTO.getStatus() != null)
-                    persistedEventOperation.setStatus(incomingUpdateOperationDTO.getStatus());
-                    
-                return EventOperationMapper.INSTANCE.toDTO(persistedEventOperation);
-            })
             .onFailure().transform(e -> e instanceof EventEaseException
                 ? e
                 : new EventOperationUpdateException(id, e.getCause())
             );
+
     }
 
     @WithTransaction

@@ -10,11 +10,11 @@ import org.servament.dto.CreateEventDTO;
 import org.servament.dto.EventDTO;
 import org.servament.dto.UpdateEventDTO;
 import org.servament.entity.EventService;
+import org.servament.exception.EventClosingException;
+import org.servament.exception.EventCompletingException;
 import org.servament.exception.EventEaseException;
-import org.servament.exception.EventServiceClosingException;
-import org.servament.exception.EventServiceCompletingException;
+import org.servament.exception.EventPublicationException;
 import org.servament.exception.EventServiceIllegalInputException;
-import org.servament.exception.EventServicePublicationException;
 import org.servament.exception.EventServiceUpdateException;
 import org.servament.mapper.EventServiceMapper;
 import org.servament.model.EventStatus;
@@ -143,8 +143,8 @@ public class EventServiceService {
         return this.eventServiceRepository.find(id)
             .map((EventService persistedEventService) -> {
                 Instant now = Instant.now().plusSeconds(3600L); //Plus one hour
-                if(persistedEventService.getStartDateTime().isBefore(now)) throw new EventServicePublicationException(String.format("Event Service with the following UUID: %s, cannot be published due to the following start date. You can publish event at most from 1 hour starting from now", id));
-                if(!persistedEventService.getStatus().equals(EventStatus.DRAFT)) throw new EventServicePublicationException(String.format("Event Service with the following UUID: %s, cannot be published because is not in DRAFT mode", id));
+                if(persistedEventService.getStartDateTime().isBefore(now)) throw new EventPublicationException(String.format("Event Service with the following UUID: %s, cannot be published due to the following start date. You can publish event at most from 1 hour starting from now", id));
+                if(!persistedEventService.getStatus().equals(EventStatus.DRAFT)) throw new EventPublicationException(String.format("Event Service with the following UUID: %s, cannot be published because is not in DRAFT mode", id));
                 
                 persistedEventService.setStatus(EventStatus.PUBLISHED);
                 return null;
@@ -155,7 +155,7 @@ public class EventServiceService {
     public Uni<Void> complete(UUID id) {
         return this.eventServiceRepository.find(id)
             .map((EventService persistedEventService) -> {
-                if(!persistedEventService.getStatus().equals(EventStatus.IN_PROGRESS)) throw new EventServiceCompletingException(id);
+                if(!persistedEventService.getStatus().equals(EventStatus.IN_PROGRESS)) throw new EventCompletingException(id);
 
                 persistedEventService.setEndDateTime(Instant.now());
                 persistedEventService.setStatus(EventStatus.COMPLETED);
@@ -178,7 +178,7 @@ public class EventServiceService {
             )
             .flatMap(this.eventServiceRepository::find)
             .map((EventService persistedEventService) -> {
-                if(!persistedEventService.getStatus().equals(EventStatus.IN_PROGRESS)) throw new EventServiceClosingException(id);
+                if(!persistedEventService.getStatus().equals(EventStatus.IN_PROGRESS)) throw new EventClosingException(id);
                 
                 persistedEventService.setNote(closeEventDTO.getNote());
                 persistedEventService.setStatus(EventStatus.CLOSED);

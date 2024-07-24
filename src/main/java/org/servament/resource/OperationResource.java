@@ -5,13 +5,17 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
+import org.servament.dto.ClosingReasonDTO;
 import org.servament.dto.CreateOperationDTO;
 import org.servament.dto.ErrorResponseDTO;
 import org.servament.dto.OperationDTO;
 import org.servament.dto.UpdateOperationDTO;
+import org.servament.exception.EventClosingException;
+import org.servament.exception.EventCompletingException;
 import org.servament.exception.EventEaseException;
 import org.servament.exception.EventOperationIllegalInputException;
 import org.servament.exception.EventOperationNotFoundException;
+import org.servament.exception.EventPublicationException;
 import org.servament.exception.EventServiceNotFoundException;
 import org.servament.model.EventStatus;
 import org.servament.model.Pagination;
@@ -84,6 +88,25 @@ public class OperationResource {
     }
 
     @POST
+    @Path("/operations/{id}/publish")
+    public Uni<Void> publish(@PathParam("id") UUID id) {
+        return this.eventOperationService.publish(id);
+    }
+
+    @POST
+    @Path("/operations/{id}/complete")
+    public Uni<Void> complete(@PathParam("id") UUID id) {
+        return this.eventOperationService.complete(id);
+    }
+
+    @POST
+    @Path("/operations/{id}/close")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Uni<Void> close(@PathParam("id") UUID id, ClosingReasonDTO closingReasonDTO) {
+        return this.eventOperationService.close(id, closingReasonDTO);
+    }
+    
+    @POST
     @Path("/operation")
     @Consumes(MediaType.APPLICATION_JSON)
     public Uni<OperationDTO> create(CreateOperationDTO createOperationDTO) {
@@ -111,6 +134,9 @@ public class OperationResource {
 
         if(e instanceof EventOperationIllegalInputException) {
             return Response.status(Status.BAD_REQUEST).entity(error).build();
+        }
+        if(e instanceof EventPublicationException || e instanceof EventClosingException || e instanceof EventCompletingException) {
+            return Response.status(Status.FORBIDDEN).entity(error).build();
         }
         if(e instanceof EventOperationNotFoundException || e instanceof EventServiceNotFoundException) {
             return Response.status(Status.NOT_FOUND).entity(error).build();

@@ -11,13 +11,13 @@ import org.servament.dto.CreateEventDTO;
 import org.servament.dto.ErrorResponseDTO;
 import org.servament.dto.EventDTO;
 import org.servament.dto.UpdateEventDTO;
+import org.servament.exception.EventClosingException;
+import org.servament.exception.EventCompletingException;
 import org.servament.exception.EventEaseException;
 import org.servament.exception.EventOperationNotFoundException;
-import org.servament.exception.EventServiceClosingException;
-import org.servament.exception.EventServiceCompletingException;
+import org.servament.exception.EventPublicationException;
 import org.servament.exception.EventServiceIllegalInputException;
 import org.servament.exception.EventServiceNotFoundException;
-import org.servament.exception.EventServicePublicationException;
 import org.servament.model.EventStatus;
 import org.servament.model.Pagination;
 import org.servament.model.filter.EventServiceFilter;
@@ -103,8 +103,8 @@ public class EventResource {
     @POST
     @Path("/events/{id}/close")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Uni<Void> close(@PathParam("id") UUID id, ClosingReasonDTO closingEventDTO) {
-        return this.eventServiceService.close(id, closingEventDTO);
+    public Uni<Void> close(@PathParam("id") UUID id, ClosingReasonDTO closingReasonDTO) {
+        return this.eventServiceService.close(id, closingReasonDTO);
     }
     
     @POST
@@ -135,7 +135,7 @@ public class EventResource {
         if(e instanceof EventServiceIllegalInputException) {
             return Response.status(Status.BAD_REQUEST).entity(error).build();
         }
-        if(e instanceof EventServicePublicationException || e instanceof EventServiceClosingException || e instanceof EventServiceCompletingException) {
+        if(e instanceof EventPublicationException || e instanceof EventClosingException || e instanceof EventCompletingException) {
             return Response.status(Status.FORBIDDEN).entity(error).build();
         }
         if(e instanceof EventServiceNotFoundException || e instanceof EventOperationNotFoundException) {

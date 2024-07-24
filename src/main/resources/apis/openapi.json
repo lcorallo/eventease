@@ -339,7 +339,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/ClosingEventDTO"
+                "$ref" : "#/components/schemas/ClosingReasonDTO"
               }
             }
           }
@@ -587,6 +587,69 @@
         }
       }
     },
+    "/operations/{id}/close" : {
+      "post" : {
+        "tags" : [ "Operation Resource" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/UUID"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ClosingReasonDTO"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Created"
+          }
+        }
+      }
+    },
+    "/operations/{id}/complete" : {
+      "post" : {
+        "tags" : [ "Operation Resource" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/UUID"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Created"
+          }
+        }
+      }
+    },
+    "/operations/{id}/publish" : {
+      "post" : {
+        "tags" : [ "Operation Resource" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/UUID"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Created"
+          }
+        }
+      }
+    },
     "/operations:paged" : {
       "get" : {
         "tags" : [ "Operation Resource" ],
@@ -638,7 +701,7 @@
         "enum" : [ "PENDING", "CONFIRMED", "REJECTED", "CANCELLED" ],
         "type" : "string"
       },
-      "ClosingEventDTO" : {
+      "ClosingReasonDTO" : {
         "required" : [ "note" ],
         "type" : "object",
         "properties" : {
@@ -693,13 +756,6 @@
           },
           "estimatedEndDateTime" : {
             "$ref" : "#/components/schemas/Instant"
-          },
-          "endDateTime" : {
-            "$ref" : "#/components/schemas/Instant"
-          },
-          "note" : {
-            "maxLength" : 1000,
-            "type" : "string"
           },
           "location" : {
             "$ref" : "#/components/schemas/UUID"
@@ -937,13 +993,6 @@
           "estimatedEndDateTime" : {
             "$ref" : "#/components/schemas/Instant"
           },
-          "endDateTime" : {
-            "$ref" : "#/components/schemas/Instant"
-          },
-          "note" : {
-            "maxLength" : 1000,
-            "type" : "string"
-          },
           "location" : {
             "$ref" : "#/components/schemas/UUID"
           },
@@ -953,9 +1002,6 @@
           "partecipants" : {
             "format" : "int32",
             "type" : "integer"
-          },
-          "status" : {
-            "$ref" : "#/components/schemas/EventStatus"
           }
         }
       }

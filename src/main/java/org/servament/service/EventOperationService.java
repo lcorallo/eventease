@@ -60,7 +60,8 @@ public class EventOperationService {
     }
 
     public Uni<Pagination<OperationDTO>> pagination(PaginationFilter paginationFilter, EventOperationFilter filter) {
-        return this.eventOperationRepository.pagination(paginationFilter, filter).map(EventOperationMapper.INSTANCE::toPaginationDTO);
+        return this.eventOperationRepository.pagination(paginationFilter, filter)
+            .map(EventOperationMapper.INSTANCE::toPaginationDTO);
     }
 
     @WithTransaction

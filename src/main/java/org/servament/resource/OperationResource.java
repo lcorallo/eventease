@@ -10,6 +10,7 @@ import org.servament.dto.CreateOperationDTO;
 import org.servament.dto.ErrorResponseDTO;
 import org.servament.dto.OperationDTO;
 import org.servament.dto.UpdateOperationDTO;
+import org.servament.entity.EventOperation;
 import org.servament.exception.EventClosingException;
 import org.servament.exception.EventCompletingException;
 import org.servament.exception.EventEaseException;
@@ -75,10 +76,21 @@ public class OperationResource {
 
     @GET
     @Path("/operations:paged")
-    public Uni<Pagination<OperationDTO>> paginated() {
-        PaginationFilter pagFilter = new PaginationFilter(5, 0);
-
-        return eventOperationService.pagination(pagFilter, null);
+    public Uni<Pagination<OperationDTO>> paginated(    
+        @QueryParam("events") Set<UUID> events,
+        @QueryParam("activities") Set<UUID> activities,
+        @QueryParam("operators") Set<UUID> operators,
+        @QueryParam("statuses") Set<EventStatus> statuses,
+        @QueryParam("numPage") Integer numPage,
+        @QueryParam("pageSize") Integer pageSize
+    ) {
+        PaginationFilter pagFilter = new PaginationFilter(pageSize != null ? pageSize : 10, numPage != null ? numPage : 0);
+        EventOperationFilter filter = new EventOperationFilter();
+        filter.setEventServiceIds(events);
+        filter.setActivities(activities);
+        filter.setOperators(operators);
+        filter.setStatuses(statuses);
+        return eventOperationService.pagination(pagFilter, filter);
     }
 
     @GET

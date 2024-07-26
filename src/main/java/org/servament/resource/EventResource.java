@@ -5,20 +5,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import org.jboss.resteasy.reactive.RestResponse.Status;
-import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 import org.servament.dto.ClosingReasonDTO;
 import org.servament.dto.CreateEventDTO;
-import org.servament.dto.ErrorResponseDTO;
 import org.servament.dto.EventDTO;
 import org.servament.dto.UpdateEventDTO;
-import org.servament.exception.EventClosingException;
-import org.servament.exception.EventCompletingException;
-import org.servament.exception.EventEaseException;
-import org.servament.exception.EventOperationNotFoundException;
-import org.servament.exception.EventPublicationException;
-import org.servament.exception.EventServiceIllegalInputException;
-import org.servament.exception.EventServiceNotFoundException;
 import org.servament.model.EventStatus;
 import org.servament.model.Pagination;
 import org.servament.model.filter.EventServiceFilter;
@@ -145,22 +135,6 @@ public class EventResource {
     public Uni<Response> remove(@PathParam("id") UUID id) {
         return this.eventServiceService.remove(id)
             .map(t -> Response.noContent().build());
-    }
-
-    @ServerExceptionMapper
-    public Response mapExecution(EventEaseException e) {
-        ErrorResponseDTO error = new ErrorResponseDTO(e.getErrorCode(), e.getMessage(), e.getCause() != null ? e.getCause().getMessage() : null);
-        
-        if(e instanceof EventServiceIllegalInputException) {
-            return Response.status(Status.BAD_REQUEST).entity(error).build();
-        }
-        if(e instanceof EventPublicationException || e instanceof EventClosingException || e instanceof EventCompletingException) {
-            return Response.status(Status.FORBIDDEN).entity(error).build();
-        }
-        if(e instanceof EventServiceNotFoundException || e instanceof EventOperationNotFoundException) {
-            return Response.status(Status.NOT_FOUND).entity(error).build();
-        }
-        return Response.status(Status.INTERNAL_SERVER_ERROR).entity(error).build();
     }
 
 }

@@ -5,11 +5,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 import org.servament.dto.BookingDTO;
-import org.servament.dto.ErrorResponseDTO;
-import org.servament.exception.BookingNotFoundException;
-import org.servament.exception.EventEaseException;
 import org.servament.model.BookingStatus;
 import org.servament.model.Pagination;
 import org.servament.model.filter.BookingFilter;
@@ -30,7 +26,6 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
 
 @Path("/")
 @Produces(MediaType.APPLICATION_JSON)
@@ -98,16 +93,6 @@ public class BookingResource {
     @Path("/bookings/{id}")
     public Uni<Response> remove(@PathParam("id") Long id) {
         throw new UnsupportedOperationException();
-    }
-    
-    @ServerExceptionMapper
-    public Response mapExecution(EventEaseException e) {
-        ErrorResponseDTO error = new ErrorResponseDTO(e.getErrorCode(), e.getMessage(), e.getCause() != null ? e.getCause().getMessage() : null);
-
-        if(e instanceof BookingNotFoundException) {
-            return Response.status(Status.NOT_FOUND).entity(error).build();
-        }
-        return Response.status(Status.INTERNAL_SERVER_ERROR).entity(error).build();
     }
 
 }   

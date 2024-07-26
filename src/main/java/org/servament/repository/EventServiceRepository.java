@@ -14,7 +14,6 @@ import org.servament.model.filter.PaginationFilter;
 
 import io.quarkus.hibernate.reactive.panache.PanacheQuery;
 import io.smallrye.mutiny.Uni;
-import io.smallrye.mutiny.tuples.Tuple3;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
@@ -67,15 +66,18 @@ public class EventServiceRepository implements IEventServiceRepository {
         final Uni<Integer> numPages = query.pageCount();
         final Uni<Long> allData = query.count();
 
-        return Uni.combine().all().unis(pagedData, numPages, allData)
-                .collectFailures()
-                .asTuple()
-                .map((Tuple3<List<EventService>, Integer, Long> tuple3) -> new Pagination<EventService>(
-                        tuple3.getItem1(),
-                        paginationFilter.getNumPage(),
-                        paginationFilter.getPageSize(),
-                        tuple3.getItem2(),
-                        tuple3.getItem3().intValue()));
+        return pagedData.flatMap((List<EventService> paginatedEventServices) -> 
+                    numPages.flatMap((Integer totalPages) -> 
+                        allData.map((Long totalData) -> new Pagination<EventService>(
+                                paginatedEventServices,
+                                paginationFilter.getNumPage(),
+                                paginationFilter.getPageSize(),
+                                totalPages,
+                                totalData.intValue()
+                            )
+                        )
+                    )
+                );
     }
 
     @Override

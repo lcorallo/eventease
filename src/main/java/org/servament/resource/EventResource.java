@@ -75,11 +75,21 @@ public class EventResource {
 
     @GET
     @Path("/events:paged")
-    public Uni<Pagination<EventDTO>> paginated() {
-
-        PaginationFilter pagFilter = new PaginationFilter(5, 0);
-
-        return this.eventServiceService.pagination(pagFilter, null);
+    public Uni<Pagination<EventDTO>> paginated(
+        @QueryParam("codes") Set<String> codes,
+        @QueryParam("activities") Set<UUID> activities,
+        @QueryParam("suppliers") Set<UUID> suppliers,
+        @QueryParam("statuses") Set<EventStatus> statuses,
+        @QueryParam("numPage") Integer numPage,
+        @QueryParam("pageSize") Integer pageSize
+    ) {
+        PaginationFilter pagFilter = new PaginationFilter(pageSize, numPage);
+        EventServiceFilter filter = new EventServiceFilter();
+        filter.setCodes(codes);
+        filter.setActivities(activities);
+        filter.setSuppliers(suppliers);
+        filter.setStatuses(statuses);
+        return this.eventServiceService.pagination(pagFilter, filter);
     }
 
     @GET

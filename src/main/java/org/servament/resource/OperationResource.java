@@ -10,7 +10,6 @@ import org.servament.dto.CreateOperationDTO;
 import org.servament.dto.ErrorResponseDTO;
 import org.servament.dto.OperationDTO;
 import org.servament.dto.UpdateOperationDTO;
-import org.servament.entity.EventOperation;
 import org.servament.exception.EventClosingException;
 import org.servament.exception.EventCompletingException;
 import org.servament.exception.EventEaseException;
@@ -84,7 +83,7 @@ public class OperationResource {
         @QueryParam("numPage") Integer numPage,
         @QueryParam("pageSize") Integer pageSize
     ) {
-        PaginationFilter pagFilter = new PaginationFilter(pageSize != null ? pageSize : 10, numPage != null ? numPage : 0);
+        PaginationFilter pagFilter = new PaginationFilter(pageSize, numPage);
         EventOperationFilter filter = new EventOperationFilter();
         filter.setEventServiceIds(events);
         filter.setActivities(activities);

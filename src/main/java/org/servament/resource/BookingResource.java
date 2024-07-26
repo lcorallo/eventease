@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.logging.Logger;
 
-import org.jboss.logmanager.Level;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 import org.servament.dto.BookingDTO;
 import org.servament.dto.ErrorResponseDTO;
@@ -29,6 +27,7 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -39,29 +38,41 @@ import jakarta.ws.rs.core.Response.Status;
 @WithSession
 public class BookingResource {
 
+    private final BookingService bookingService;
+
     @Inject
-    private BookingService bookingService;
+    public BookingResource(BookingService bookingService) {
+        this.bookingService = bookingService;
+    }
 
     @GET
     @Path("/bookings")
-    public Uni<List<BookingDTO>> list() {
-        return this.bookingService.list(null).onFailure()
-        .call(e -> {
-            Logger.getLogger("MIO").log(Level.ERROR, null, e);
-
-            return Uni.createFrom().item(e);
-        });
+    public Uni<List<BookingDTO>> list(
+        @QueryParam("events") Set<UUID> events,
+        @QueryParam("statuses") Set<BookingStatus> statuses,
+        @QueryParam("limit") Integer limit,
+        @QueryParam("offset") Integer offset
+    ) {
+        BookingFilter bookingFilter = new BookingFilter();
+        bookingFilter.setEvents(new ArrayList<>(events));
+        bookingFilter.setStatuses(statuses);
+        bookingFilter.setLimit(limit);
+        bookingFilter.setOffset(offset);        
+        return this.bookingService.list(bookingFilter);
     }
 
     @GET
     @Path("/bookings:paged")
-    public Uni<Pagination<BookingDTO>> paginated() {
-        List<UUID> eventIds = new ArrayList<>();
-        eventIds.add(UUID.fromString("1f8a6e3e-2c6b-4e69-8a47-13543b7e1c45"));
-
-        BookingFilter filter = new BookingFilter(Set.of(BookingStatus.PENDING, BookingStatus.CONFIRMED), null);
-        PaginationFilter pagFilter = new PaginationFilter(5, 0);
-
+    public Uni<Pagination<BookingDTO>> paginated(
+        @QueryParam("events") Set<UUID> events,
+        @QueryParam("statuses") Set<BookingStatus> statuses,
+        @QueryParam("numPage") Integer numPage,
+        @QueryParam("pageSize") Integer pageSize
+    ) {
+        PaginationFilter pagFilter = new PaginationFilter(pageSize, numPage);
+        BookingFilter filter = new BookingFilter();
+        filter.setEvents(new ArrayList<>(events));
+        filter.setStatuses(statuses);
         return bookingService.pagination(pagFilter, filter);
     }
 

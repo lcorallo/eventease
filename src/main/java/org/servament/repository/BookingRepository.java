@@ -72,28 +72,32 @@ public class BookingRepository implements IBookingRepository {
 
     @Override
     public Uni<List<Booking>> list(BookingFilter filter) {
-        return this.buildFetchQuery(filter).list();
+        return this.buildFetchQuery(filter).range(
+            filter.getOffset(),
+            filter.getLimit() + filter.getOffset() - 1
+        ).list();
     }
 
     @Override
     public Uni<Booking> find(Long id) {
         return this.findById(id)
-                    .flatMap((Booking eventService) -> eventService == null
+                    .flatMap((Booking booking) -> booking == null
                     ? Uni.createFrom().failure(new BookingNotFoundException(id))
-                    : Uni.createFrom().item(eventService));
+                    : Uni.createFrom().item(booking));
     }
 
     @Override
     public Uni<Booking> create(Booking incomingEntity) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'create'");
+       return this.persist(incomingEntity);
     }
-
 
     @Override
     public Uni<Void> remove(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'remove'");
+        return this.findById(id)
+            .flatMap((Booking booking) -> booking == null
+                        ? Uni.createFrom().failure(new BookingNotFoundException(id))
+                        : this.delete(booking)
+            );
     }
 
 }

@@ -1,5 +1,6 @@
 package org.servament.resource;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -60,6 +61,8 @@ public class OperationResource {
         @QueryParam("activities") Set<UUID> activities,
         @QueryParam("operators") Set<UUID> operators,
         @QueryParam("statuses") Set<EventStatus> statuses,
+        @QueryParam("startFrom") Instant startFrom,
+        @QueryParam("endFrom") Instant endFrom,
         @QueryParam("limit") Integer limit,
         @QueryParam("offset") Integer offset
     ) {
@@ -68,6 +71,8 @@ public class OperationResource {
         filter.setActivities(activities);
         filter.setOperators(operators);
         filter.setStatuses(statuses);
+        filter.setFromStartDate(startFrom);
+        filter.setEndStartDate(endFrom);
         filter.setLimit(limit);
         filter.setOffset(offset);
         return this.eventOperationService.list(filter);
@@ -80,6 +85,8 @@ public class OperationResource {
         @QueryParam("activities") Set<UUID> activities,
         @QueryParam("operators") Set<UUID> operators,
         @QueryParam("statuses") Set<EventStatus> statuses,
+        @QueryParam("startFrom") Instant startFrom,
+        @QueryParam("endFrom") Instant endFrom,
         @QueryParam("numPage") Integer numPage,
         @QueryParam("pageSize") Integer pageSize
     ) {
@@ -89,6 +96,8 @@ public class OperationResource {
         filter.setActivities(activities);
         filter.setOperators(operators);
         filter.setStatuses(statuses);
+        filter.setFromStartDate(startFrom);
+        filter.setEndStartDate(endFrom);
         return eventOperationService.pagination(pagFilter, filter);
     }
 

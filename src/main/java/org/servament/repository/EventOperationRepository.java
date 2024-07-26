@@ -49,6 +49,16 @@ public class EventOperationRepository implements IEventOperationRepository {
                 params.put("activities", filter.getActivities());
                 strBuilder.append(" and activity IN :activities");
             }
+
+            if (filter.getFromStartDate() != null) {
+                params.put("startFrom", filter.getFromStartDate());
+                strBuilder.append(" and start_datetime >= :startFrom");
+            }
+
+            if (filter.getEndStartDate() != null) {
+                params.put("endFrom", filter.getEndStartDate());
+                strBuilder.append(" and start_datetime <= :endFrom");
+            }
     
             if(strBuilder.indexOf(" and", 0) == 0) {
                 strBuilder.replace(0, 4, "");

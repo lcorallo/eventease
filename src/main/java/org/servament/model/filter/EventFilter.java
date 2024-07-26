@@ -1,5 +1,6 @@
 package org.servament.model.filter;
 
+import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
 
@@ -17,6 +18,10 @@ import lombok.Setter;
 @NoArgsConstructor
 
 public abstract class EventFilter extends BaseFilter {
+
+    private Instant fromStartDate;
+
+    private Instant endStartDate;
 
     private Set<EventStatus> statuses;
 

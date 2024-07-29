@@ -49,12 +49,12 @@ public class EventServiceRepository implements IEventServiceRepository {
 
             if (filter.getFromStartDate() != null) {
                 params.put("startFrom", filter.getFromStartDate());
-                strBuilder.append(" and start_datetime >= :startFrom");
+                strBuilder.append(" and startDateTime >= :startFrom");
             }
 
             if (filter.getEndStartDate() != null) {
                 params.put("endFrom", filter.getEndStartDate());
-                strBuilder.append(" and start_datetime <= :endFrom");
+                strBuilder.append(" and startDateTime <= :endFrom");
             }
 
             if (strBuilder.indexOf(" and", 0) == 0) {

@@ -1,0 +1,1433 @@
+{
+  "openapi" : "3.0.3",
+  "info" : {
+    "title" : "Event-Ease API",
+    "description" : "Seamlessly manage any event quickly and easily with our versatile SaaS platform. Perfect for any occasion.",
+    "termsOfService" : "Your terms here",
+    "contact" : {
+      "name" : "Example API Support",
+      "url" : "http://exampleurl.com/contact",
+      "email" : "coralo.luca@outlook.com"
+    },
+    "license" : {
+      "name" : "MIT License",
+      "url" : "https://opensource.org/license/mit"
+    },
+    "version" : "1.0.0"
+  },
+  "servers" : [ {
+    "url" : "http://localhost:8080",
+    "description" : "Auto generated value"
+  }, {
+    "url" : "http://0.0.0.0:8080",
+    "description" : "Auto generated value"
+  } ],
+  "paths" : {
+    "/booking" : {
+      "post" : {
+        "tags" : [ "Booking Resource" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CreateBookingDTO"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/BookingDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookings" : {
+      "get" : {
+        "tags" : [ "Booking Resource" ],
+        "parameters" : [ {
+          "name" : "events",
+          "in" : "query",
+          "schema" : {
+            "uniqueItems" : true,
+            "type" : "array",
+            "items" : {
+              "format" : "uuid",
+              "pattern" : "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}",
+              "type" : "string"
+            }
+          }
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "schema" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "schema" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        }, {
+          "name" : "statuses",
+          "in" : "query",
+          "schema" : {
+            "uniqueItems" : true,
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/BookingStatus"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/BookingDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookings/{id}" : {
+      "get" : {
+        "tags" : [ "Booking Resource" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "format" : "int64",
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/BookingDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Booking Resource" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "format" : "int64",
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : { }
+            }
+          }
+        }
+      },
+      "head" : {
+        "tags" : [ "Booking Resource" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "format" : "int64",
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : { }
+            }
+          }
+        }
+      },
+      "patch" : {
+        "tags" : [ "Booking Resource" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "format" : "int64",
+            "type" : "integer"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UpdateBookingDTO"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/BookingDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookings:paged" : {
+      "get" : {
+        "tags" : [ "Booking Resource" ],
+        "parameters" : [ {
+          "name" : "events",
+          "in" : "query",
+          "schema" : {
+            "uniqueItems" : true,
+            "type" : "array",
+            "items" : {
+              "format" : "uuid",
+              "pattern" : "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}",
+              "type" : "string"
+            }
+          }
+        }, {
+          "name" : "numPage",
+          "in" : "query",
+          "schema" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        }, {
+          "name" : "pageSize",
+          "in" : "query",
+          "schema" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        }, {
+          "name" : "statuses",
+          "in" : "query",
+          "schema" : {
+            "uniqueItems" : true,
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/BookingStatus"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PaginationBookingDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/event" : {
+      "post" : {
+        "tags" : [ "Event Resource" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CreateEventDTO"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/EventDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/events" : {
+      "get" : {
+        "tags" : [ "Event Resource" ],
+        "parameters" : [ {
+          "name" : "activities",
+          "in" : "query",
+          "schema" : {
+            "uniqueItems" : true,
+            "type" : "array",
+            "items" : {
+              "format" : "uuid",
+              "pattern" : "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}",
+              "type" : "string"
+            }
+          }
+        }, {
+          "name" : "codes",
+          "in" : "query",
+          "schema" : {
+            "uniqueItems" : true,
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          }
+        }, {
+          "name" : "endFrom",
+          "in" : "query",
+          "schema" : {
+            "$ref" : "#/components/schemas/Instant"
+          }
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "schema" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "schema" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        }, {
+          "name" : "startFrom",
+          "in" : "query",
+          "schema" : {
+            "$ref" : "#/components/schemas/Instant"
+          }
+        }, {
+          "name" : "statuses",
+          "in" : "query",
+          "schema" : {
+            "uniqueItems" : true,
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/EventStatus"
+            }
+          }
+        }, {
+          "name" : "suppliers",
+          "in" : "query",
+          "schema" : {
+            "uniqueItems" : true,
+            "type" : "array",
+            "items" : {
+              "format" : "uuid",
+              "pattern" : "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}",
+              "type" : "string"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/EventDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/events/code/{code}" : {
+      "get" : {
+        "tags" : [ "Event Resource" ],
+        "parameters" : [ {
+          "name" : "code",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/EventDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head" : {
+        "tags" : [ "Event Resource" ],
+        "parameters" : [ {
+          "name" : "code",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : { }
+            }
+          }
+        }
+      }
+    },
+    "/events/{id}" : {
+      "get" : {
+        "tags" : [ "Event Resource" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/UUID"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/EventDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Event Resource" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/UUID"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : { }
+            }
+          }
+        }
+      },
+      "head" : {
+        "tags" : [ "Event Resource" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/UUID"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : { }
+            }
+          }
+        }
+      },
+      "patch" : {
+        "tags" : [ "Event Resource" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/UUID"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UpdateEventDTO"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/EventDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/events/{id}/close" : {
+      "post" : {
+        "tags" : [ "Event Resource" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/UUID"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ClosingReasonDTO"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Created"
+          }
+        }
+      }
+    },
+    "/events/{id}/complete" : {
+      "post" : {
+        "tags" : [ "Event Resource" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/UUID"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Created"
+          }
+        }
+      }
+    },
+    "/events/{id}/publish" : {
+      "post" : {
+        "tags" : [ "Event Resource" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/UUID"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Created"
+          }
+        }
+      }
+    },
+    "/events:paged" : {
+      "get" : {
+        "tags" : [ "Event Resource" ],
+        "parameters" : [ {
+          "name" : "activities",
+          "in" : "query",
+          "schema" : {
+            "uniqueItems" : true,
+            "type" : "array",
+            "items" : {
+              "format" : "uuid",
+              "pattern" : "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}",
+              "type" : "string"
+            }
+          }
+        }, {
+          "name" : "codes",
+          "in" : "query",
+          "schema" : {
+            "uniqueItems" : true,
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          }
+        }, {
+          "name" : "endFrom",
+          "in" : "query",
+          "schema" : {
+            "$ref" : "#/components/schemas/Instant"
+          }
+        }, {
+          "name" : "numPage",
+          "in" : "query",
+          "schema" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        }, {
+          "name" : "pageSize",
+          "in" : "query",
+          "schema" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        }, {
+          "name" : "startFrom",
+          "in" : "query",
+          "schema" : {
+            "$ref" : "#/components/schemas/Instant"
+          }
+        }, {
+          "name" : "statuses",
+          "in" : "query",
+          "schema" : {
+            "uniqueItems" : true,
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/EventStatus"
+            }
+          }
+        }, {
+          "name" : "suppliers",
+          "in" : "query",
+          "schema" : {
+            "uniqueItems" : true,
+            "type" : "array",
+            "items" : {
+              "format" : "uuid",
+              "pattern" : "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}",
+              "type" : "string"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PaginationEventDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/operation" : {
+      "post" : {
+        "tags" : [ "Operation Resource" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CreateOperationDTO"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/OperationDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/operations" : {
+      "get" : {
+        "tags" : [ "Operation Resource" ],
+        "parameters" : [ {
+          "name" : "activities",
+          "in" : "query",
+          "schema" : {
+            "uniqueItems" : true,
+            "type" : "array",
+            "items" : {
+              "format" : "uuid",
+              "pattern" : "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}",
+              "type" : "string"
+            }
+          }
+        }, {
+          "name" : "endFrom",
+          "in" : "query",
+          "schema" : {
+            "$ref" : "#/components/schemas/Instant"
+          }
+        }, {
+          "name" : "events",
+          "in" : "query",
+          "schema" : {
+            "uniqueItems" : true,
+            "type" : "array",
+            "items" : {
+              "format" : "uuid",
+              "pattern" : "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}",
+              "type" : "string"
+            }
+          }
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "schema" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "schema" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        }, {
+          "name" : "operators",
+          "in" : "query",
+          "schema" : {
+            "uniqueItems" : true,
+            "type" : "array",
+            "items" : {
+              "format" : "uuid",
+              "pattern" : "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}",
+              "type" : "string"
+            }
+          }
+        }, {
+          "name" : "startFrom",
+          "in" : "query",
+          "schema" : {
+            "$ref" : "#/components/schemas/Instant"
+          }
+        }, {
+          "name" : "statuses",
+          "in" : "query",
+          "schema" : {
+            "uniqueItems" : true,
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/EventStatus"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/OperationDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/operations/{id}" : {
+      "get" : {
+        "tags" : [ "Operation Resource" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/UUID"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/OperationDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Operation Resource" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/UUID"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : { }
+            }
+          }
+        }
+      },
+      "head" : {
+        "tags" : [ "Operation Resource" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/UUID"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : { }
+            }
+          }
+        }
+      },
+      "patch" : {
+        "tags" : [ "Operation Resource" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/UUID"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UpdateOperationDTO"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/OperationDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/operations/{id}/close" : {
+      "post" : {
+        "tags" : [ "Operation Resource" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/UUID"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ClosingReasonDTO"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Created"
+          }
+        }
+      }
+    },
+    "/operations/{id}/complete" : {
+      "post" : {
+        "tags" : [ "Operation Resource" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/UUID"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Created"
+          }
+        }
+      }
+    },
+    "/operations/{id}/publish" : {
+      "post" : {
+        "tags" : [ "Operation Resource" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/UUID"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Created"
+          }
+        }
+      }
+    },
+    "/operations:paged" : {
+      "get" : {
+        "tags" : [ "Operation Resource" ],
+        "parameters" : [ {
+          "name" : "activities",
+          "in" : "query",
+          "schema" : {
+            "uniqueItems" : true,
+            "type" : "array",
+            "items" : {
+              "format" : "uuid",
+              "pattern" : "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}",
+              "type" : "string"
+            }
+          }
+        }, {
+          "name" : "endFrom",
+          "in" : "query",
+          "schema" : {
+            "$ref" : "#/components/schemas/Instant"
+          }
+        }, {
+          "name" : "events",
+          "in" : "query",
+          "schema" : {
+            "uniqueItems" : true,
+            "type" : "array",
+            "items" : {
+              "format" : "uuid",
+              "pattern" : "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}",
+              "type" : "string"
+            }
+          }
+        }, {
+          "name" : "numPage",
+          "in" : "query",
+          "schema" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        }, {
+          "name" : "operators",
+          "in" : "query",
+          "schema" : {
+            "uniqueItems" : true,
+            "type" : "array",
+            "items" : {
+              "format" : "uuid",
+              "pattern" : "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}",
+              "type" : "string"
+            }
+          }
+        }, {
+          "name" : "pageSize",
+          "in" : "query",
+          "schema" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        }, {
+          "name" : "startFrom",
+          "in" : "query",
+          "schema" : {
+            "$ref" : "#/components/schemas/Instant"
+          }
+        }, {
+          "name" : "statuses",
+          "in" : "query",
+          "schema" : {
+            "uniqueItems" : true,
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/EventStatus"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PaginationOperationDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "BookingDTO" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "event" : {
+            "$ref" : "#/components/schemas/UUID"
+          },
+          "eventCode" : {
+            "type" : "string"
+          },
+          "supplier" : {
+            "$ref" : "#/components/schemas/UUID"
+          },
+          "consumer" : {
+            "$ref" : "#/components/schemas/UUID"
+          },
+          "status" : {
+            "$ref" : "#/components/schemas/BookingStatus"
+          },
+          "createdAt" : {
+            "$ref" : "#/components/schemas/Instant"
+          }
+        }
+      },
+      "BookingStatus" : {
+        "enum" : [ "PENDING", "CONFIRMED", "REJECTED", "CANCELLED" ],
+        "type" : "string"
+      },
+      "ClosingReasonDTO" : {
+        "required" : [ "note" ],
+        "type" : "object",
+        "properties" : {
+          "note" : {
+            "maxLength" : 1000,
+            "pattern" : "\\S",
+            "type" : "string"
+          }
+        }
+      },
+      "CreateBookingDTO" : {
+        "required" : [ "event", "consumer" ],
+        "type" : "object",
+        "properties" : {
+          "event" : {
+            "$ref" : "#/components/schemas/UUID"
+          },
+          "consumer" : {
+            "$ref" : "#/components/schemas/UUID"
+          }
+        }
+      },
+      "CreateEventDTO" : {
+        "required" : [ "activity", "startDateTime", "estimatedEndDateTime", "code", "supplier" ],
+        "type" : "object",
+        "properties" : {
+          "activity" : {
+            "$ref" : "#/components/schemas/UUID"
+          },
+          "startDateTime" : {
+            "$ref" : "#/components/schemas/Instant"
+          },
+          "estimatedEndDateTime" : {
+            "$ref" : "#/components/schemas/Instant"
+          },
+          "startBookingDateTime" : {
+            "$ref" : "#/components/schemas/Instant"
+          },
+          "endBookingDateTime" : {
+            "$ref" : "#/components/schemas/Instant"
+          },
+          "location" : {
+            "$ref" : "#/components/schemas/UUID"
+          },
+          "code" : {
+            "pattern" : "\\S",
+            "type" : "string"
+          },
+          "supplier" : {
+            "$ref" : "#/components/schemas/UUID"
+          },
+          "availability" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        }
+      },
+      "CreateOperationDTO" : {
+        "required" : [ "event", "activity", "startDateTime", "estimatedEndDateTime", "operator" ],
+        "type" : "object",
+        "properties" : {
+          "event" : {
+            "$ref" : "#/components/schemas/UUID"
+          },
+          "activity" : {
+            "$ref" : "#/components/schemas/UUID"
+          },
+          "startDateTime" : {
+            "$ref" : "#/components/schemas/Instant"
+          },
+          "estimatedEndDateTime" : {
+            "$ref" : "#/components/schemas/Instant"
+          },
+          "startBookingDateTime" : {
+            "$ref" : "#/components/schemas/Instant"
+          },
+          "endBookingDateTime" : {
+            "$ref" : "#/components/schemas/Instant"
+          },
+          "location" : {
+            "$ref" : "#/components/schemas/UUID"
+          },
+          "operator" : {
+            "$ref" : "#/components/schemas/UUID"
+          },
+          "partecipants" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        }
+      },
+      "EventDTO" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "$ref" : "#/components/schemas/UUID"
+          },
+          "activity" : {
+            "$ref" : "#/components/schemas/UUID"
+          },
+          "operations" : {
+            "uniqueItems" : true,
+            "type" : "array",
+            "items" : {
+              "format" : "uuid",
+              "pattern" : "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}",
+              "type" : "string"
+            }
+          },
+          "startBookingDateTime" : {
+            "$ref" : "#/components/schemas/Instant"
+          },
+          "endBookingDateTime" : {
+            "$ref" : "#/components/schemas/Instant"
+          },
+          "startDateTime" : {
+            "$ref" : "#/components/schemas/Instant"
+          },
+          "estimatedEndDateTime" : {
+            "$ref" : "#/components/schemas/Instant"
+          },
+          "endDateTime" : {
+            "$ref" : "#/components/schemas/Instant"
+          },
+          "status" : {
+            "$ref" : "#/components/schemas/EventStatus"
+          },
+          "note" : {
+            "type" : "string"
+          },
+          "location" : {
+            "$ref" : "#/components/schemas/UUID"
+          },
+          "code" : {
+            "type" : "string"
+          },
+          "supplier" : {
+            "$ref" : "#/components/schemas/UUID"
+          },
+          "availability" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        }
+      },
+      "EventStatus" : {
+        "enum" : [ "DRAFT", "PUBLISHED", "IN_PROGRESS", "COMPLETED", "CANCELLED", "CLOSED" ],
+        "type" : "string"
+      },
+      "Instant" : {
+        "format" : "date-time",
+        "type" : "string",
+        "example" : "2022-03-10T16:15:50Z"
+      },
+      "OperationDTO" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "$ref" : "#/components/schemas/UUID"
+          },
+          "event" : {
+            "$ref" : "#/components/schemas/UUID"
+          },
+          "activity" : {
+            "$ref" : "#/components/schemas/UUID"
+          },
+          "startBookingDateTime" : {
+            "$ref" : "#/components/schemas/Instant"
+          },
+          "endBookingDateTime" : {
+            "$ref" : "#/components/schemas/Instant"
+          },
+          "startDateTime" : {
+            "$ref" : "#/components/schemas/Instant"
+          },
+          "estimatedEndDateTime" : {
+            "$ref" : "#/components/schemas/Instant"
+          },
+          "endDateTime" : {
+            "$ref" : "#/components/schemas/Instant"
+          },
+          "status" : {
+            "$ref" : "#/components/schemas/EventStatus"
+          },
+          "note" : {
+            "type" : "string"
+          },
+          "location" : {
+            "$ref" : "#/components/schemas/UUID"
+          },
+          "operator" : {
+            "$ref" : "#/components/schemas/UUID"
+          },
+          "partecipants" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        }
+      },
+      "PaginationBookingDTO" : {
+        "type" : "object",
+        "properties" : {
+          "data" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/BookingDTO"
+            }
+          },
+          "page" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "size" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "totalPages" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "totalSize" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        }
+      },
+      "PaginationEventDTO" : {
+        "type" : "object",
+        "properties" : {
+          "data" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/EventDTO"
+            }
+          },
+          "page" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "size" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "totalPages" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "totalSize" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        }
+      },
+      "PaginationOperationDTO" : {
+        "type" : "object",
+        "properties" : {
+          "data" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/OperationDTO"
+            }
+          },
+          "page" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "size" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "totalPages" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "totalSize" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        }
+      },
+      "UUID" : {
+        "format" : "uuid",
+        "pattern" : "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}",
+        "type" : "string"
+      },
+      "UpdateBookingDTO" : {
+        "required" : [ "consumer" ],
+        "type" : "object",
+        "properties" : {
+          "consumer" : {
+            "$ref" : "#/components/schemas/UUID"
+          }
+        }
+      },
+      "UpdateEventDTO" : {
+        "type" : "object",
+        "properties" : {
+          "activity" : {
+            "$ref" : "#/components/schemas/UUID"
+          },
+          "startDateTime" : {
+            "$ref" : "#/components/schemas/Instant"
+          },
+          "estimatedEndDateTime" : {
+            "$ref" : "#/components/schemas/Instant"
+          },
+          "startBookingDateTime" : {
+            "$ref" : "#/components/schemas/Instant"
+          },
+          "endBookingDateTime" : {
+            "$ref" : "#/components/schemas/Instant"
+          },
+          "location" : {
+            "$ref" : "#/components/schemas/UUID"
+          },
+          "code" : {
+            "type" : "string"
+          },
+          "supplier" : {
+            "$ref" : "#/components/schemas/UUID"
+          },
+          "availability" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        }
+      },
+      "UpdateOperationDTO" : {
+        "type" : "object",
+        "properties" : {
+          "event" : {
+            "$ref" : "#/components/schemas/UUID"
+          },
+          "activity" : {
+            "$ref" : "#/components/schemas/UUID"
+          },
+          "startDateTime" : {
+            "$ref" : "#/components/schemas/Instant"
+          },
+          "estimatedEndDateTime" : {
+            "$ref" : "#/components/schemas/Instant"
+          },
+          "startBookingDateTime" : {
+            "$ref" : "#/components/schemas/Instant"
+          },
+          "endBookingDateTime" : {
+            "$ref" : "#/components/schemas/Instant"
+          },
+          "location" : {
+            "$ref" : "#/components/schemas/UUID"
+          },
+          "operator" : {
+            "$ref" : "#/components/schemas/UUID"
+          },
+          "partecipants" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        }
+      }
+    }
+  }
+}

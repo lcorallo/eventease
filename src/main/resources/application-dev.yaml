@@ -1,0 +1,20 @@
+quarkus:
+  log:
+    level: DEBUG
+
+  http:
+    cors: true
+    cors:
+      origins: /.*/
+  datasource:
+    db-kind: postgresql
+    username: quarkus_usr_dev
+    password: quarkus_pwd_dev
+    reactive:
+      url: vertx-reactive:postgresql://localhost:5432/eventease
+  hibernate-orm:
+    database:
+      generation: drop-and-create
+    sql-load-script: import-dev.sql
+    log:
+      sql: true

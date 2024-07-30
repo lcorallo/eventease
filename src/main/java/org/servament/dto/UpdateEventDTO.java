@@ -21,6 +21,13 @@ public class UpdateEventDTO {
     @Future
     private Instant estimatedEndDateTime;
 
+    @Future
+    private Instant startBookingDateTime;
+
+    @Future
+    private Instant endBookingDateTime;
+
+
     private UUID location;
 
     private String code;

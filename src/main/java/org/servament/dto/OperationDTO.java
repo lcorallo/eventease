@@ -19,6 +19,10 @@ public class OperationDTO {
     private UUID event;
 
     private UUID activity;
+
+    private Instant startBookingDateTime;
+
+    private Instant endBookingDateTime;
     
     private Instant startDateTime;
 

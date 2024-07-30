@@ -21,10 +21,18 @@ public class CreateOperationDTO {
     private UUID activity;
 
     @Future
+    @NotNull
     private Instant startDateTime;
 
     @Future
+    @NotNull
     private Instant estimatedEndDateTime;
+    
+    @Future
+    private Instant startBookingDateTime;
+
+    @Future
+    private Instant endBookingDateTime;
 
     private UUID location;
 

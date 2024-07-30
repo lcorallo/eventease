@@ -17,6 +17,7 @@ import org.servament.entity.EventService;
 import org.servament.exception.EventClosingException;
 import org.servament.exception.EventCompletingException;
 import org.servament.exception.EventEaseException;
+import org.servament.exception.EventIllegalInputException;
 import org.servament.exception.EventOperationIllegalInputException;
 import org.servament.exception.EventOperationUpdateException;
 import org.servament.exception.EventPublicationException;
@@ -29,6 +30,7 @@ import org.servament.model.filter.EventOperationFilter;
 import org.servament.model.filter.PaginationFilter;
 import org.servament.repository.IEventOperationRepository;
 import org.servament.repository.IEventServiceRepository;
+import org.servament.util.EventDateTimeValidator;
 
 import io.quarkus.hibernate.reactive.panache.common.WithTransaction;
 import io.quarkus.logging.Log;
@@ -131,9 +133,11 @@ public class EventOperationService {
                             violations.iterator().next().getMessage()
                         );
                     
-                    if(createOperationDTO.getStartDateTime().isAfter(createOperationDTO.getEstimatedEndDateTime()))
-                        throw new EventOperationIllegalInputException("startDateTime_estimatedEndDateTime", "Start date time cannot be after estimated end time");
-                
+                    try {
+                        EventDateTimeValidator.validate(createOperationDTO.getStartBookingDateTime(), createOperationDTO.getEndBookingDateTime(), createOperationDTO.getStartDateTime(), createOperationDTO.getEstimatedEndDateTime());
+                    } catch (EventIllegalInputException e) {
+                        throw new EventOperationIllegalInputException(e.getMessage(), e.getCause());
+                    }
                     return null;
                 })
                 .flatMap(ignore -> createOperation);
@@ -153,11 +157,17 @@ public class EventOperationService {
                 : Uni.createFrom().item(updateOperationDTO)
             )
             .flatMap(incomingUpdateOperationDTO -> eventOperationRepository.find(id)
-                .flatMap(persistedEventOperation -> {
+                .flatMap(persistedEventOperation -> {                    
                     Instant startDateTime = updateOperationDTO.getStartDateTime() != null ? updateOperationDTO.getStartDateTime() : persistedEventOperation.getStartDateTime();
                     Instant estimatedEndDateTime = updateOperationDTO.getEstimatedEndDateTime() != null ? updateOperationDTO.getEstimatedEndDateTime() : persistedEventOperation.getEstimatedEndDateTime();
-                    if(startDateTime.isAfter(estimatedEndDateTime))
-                        return Uni.createFrom().failure(new EventOperationIllegalInputException("startDateTime_estimatedEndDateTime", "Start date time cannot be after estimated end time"));
+                    Instant startBookingDateTime = updateOperationDTO.getStartBookingDateTime() != null ? updateOperationDTO.getStartBookingDateTime() : persistedEventOperation.getStartBookingDateTime();
+                    Instant endBookingDateTime = updateOperationDTO.getEndBookingDateTime() != null ? updateOperationDTO.getEndBookingDateTime() : persistedEventOperation.getEndBookingDateTime();
+                
+                    try {
+                        EventDateTimeValidator.validate(startBookingDateTime, endBookingDateTime, startDateTime, estimatedEndDateTime);
+                    } catch (EventIllegalInputException e) {
+                        throw new EventOperationIllegalInputException(e.getMessage(), e.getCause());
+                    }
 
                     // Fetch event service if needed
                     Uni<EventService> eventServiceUni = incomingUpdateOperationDTO.getEvent() != null
@@ -177,6 +187,12 @@ public class EventOperationService {
         
                         if(incomingUpdateOperationDTO.getEstimatedEndDateTime() != null)
                             persistedEventOperation.setEstimatedEndDateTime(incomingUpdateOperationDTO.getEstimatedEndDateTime());
+
+                        if(incomingUpdateOperationDTO.getStartBookingDateTime() != null)
+                            persistedEventService.setStartBookingDateTime(incomingUpdateOperationDTO.getStartBookingDateTime());
+
+                        if(incomingUpdateOperationDTO.getEndBookingDateTime() != null)
+                            persistedEventService.setEndBookingDateTime(incomingUpdateOperationDTO.getEndBookingDateTime());
         
                         if(incomingUpdateOperationDTO.getLocation() != null)
                             persistedEventOperation.setLocation(incomingUpdateOperationDTO.getLocation());

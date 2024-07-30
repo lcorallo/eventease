@@ -720,6 +720,8 @@ components:
     CreateEventDTO:
       required:
       - activity
+      - startDateTime
+      - estimatedEndDateTime
       - code
       - supplier
       type: object
@@ -729,6 +731,10 @@ components:
         startDateTime:
           $ref: "#/components/schemas/Instant"
         estimatedEndDateTime:
+          $ref: "#/components/schemas/Instant"
+        startBookingDateTime:
+          $ref: "#/components/schemas/Instant"
+        endBookingDateTime:
           $ref: "#/components/schemas/Instant"
         location:
           $ref: "#/components/schemas/UUID"
@@ -744,6 +750,8 @@ components:
       required:
       - event
       - activity
+      - startDateTime
+      - estimatedEndDateTime
       - operator
       type: object
       properties:
@@ -754,6 +762,10 @@ components:
         startDateTime:
           $ref: "#/components/schemas/Instant"
         estimatedEndDateTime:
+          $ref: "#/components/schemas/Instant"
+        startBookingDateTime:
+          $ref: "#/components/schemas/Instant"
+        endBookingDateTime:
           $ref: "#/components/schemas/Instant"
         location:
           $ref: "#/components/schemas/UUID"
@@ -776,6 +788,10 @@ components:
             format: uuid
             pattern: "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}"
             type: string
+        startBookingDateTime:
+          $ref: "#/components/schemas/Instant"
+        endBookingDateTime:
+          $ref: "#/components/schemas/Instant"
         startDateTime:
           $ref: "#/components/schemas/Instant"
         estimatedEndDateTime:
@@ -799,7 +815,6 @@ components:
       enum:
       - DRAFT
       - PUBLISHED
-      - BOOKABLE
       - IN_PROGRESS
       - COMPLETED
       - CANCELLED
@@ -818,6 +833,10 @@ components:
           $ref: "#/components/schemas/UUID"
         activity:
           $ref: "#/components/schemas/UUID"
+        startBookingDateTime:
+          $ref: "#/components/schemas/Instant"
+        endBookingDateTime:
+          $ref: "#/components/schemas/Instant"
         startDateTime:
           $ref: "#/components/schemas/Instant"
         estimatedEndDateTime:
@@ -905,6 +924,10 @@ components:
           $ref: "#/components/schemas/Instant"
         estimatedEndDateTime:
           $ref: "#/components/schemas/Instant"
+        startBookingDateTime:
+          $ref: "#/components/schemas/Instant"
+        endBookingDateTime:
+          $ref: "#/components/schemas/Instant"
         location:
           $ref: "#/components/schemas/UUID"
         code:
@@ -924,6 +947,10 @@ components:
         startDateTime:
           $ref: "#/components/schemas/Instant"
         estimatedEndDateTime:
+          $ref: "#/components/schemas/Instant"
+        startBookingDateTime:
+          $ref: "#/components/schemas/Instant"
+        endBookingDateTime:
           $ref: "#/components/schemas/Instant"
         location:
           $ref: "#/components/schemas/UUID"

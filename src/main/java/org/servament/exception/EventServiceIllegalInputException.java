@@ -9,6 +9,10 @@ public class EventServiceIllegalInputException extends EventEaseException {
         this.errorField = inputField;
     }
 
+    public EventServiceIllegalInputException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
     public EventServiceIllegalInputException(Throwable cause) {
         super(cause);
     }

@@ -7,9 +7,6 @@ public enum EventStatus {
     // Used to represent the status of an event that is new and has not been booked.
     PUBLISHED,
 
-    // Used to represent the status of an event that is bookable.
-    BOOKABLE,
-
     // Used to represent the status of an event that is in progress.
     IN_PROGRESS,
 

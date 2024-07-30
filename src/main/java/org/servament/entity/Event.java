@@ -37,6 +37,12 @@ public class Event extends PanacheEntityBase {
 
     @Column(name = "end_datetime", nullable = true)
     private Instant endDateTime;
+    
+    @Column(name = "start_booking_datetime", nullable = true)
+    private Instant startBookingDateTime;
+
+    @Column(name = "end_booking_datetime", nullable = true)
+    private Instant endBookingDateTime;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)

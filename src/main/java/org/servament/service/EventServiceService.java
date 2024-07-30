@@ -16,6 +16,7 @@ import org.servament.entity.EventService;
 import org.servament.exception.EventClosingException;
 import org.servament.exception.EventCompletingException;
 import org.servament.exception.EventEaseException;
+import org.servament.exception.EventIllegalInputException;
 import org.servament.exception.EventPublicationException;
 import org.servament.exception.EventServiceIllegalInputException;
 import org.servament.exception.EventServiceUpdateException;
@@ -26,6 +27,7 @@ import org.servament.model.Pagination;
 import org.servament.model.filter.EventServiceFilter;
 import org.servament.model.filter.PaginationFilter;
 import org.servament.repository.IEventServiceRepository;
+import org.servament.util.EventDateTimeValidator;
 
 import io.quarkus.hibernate.reactive.panache.common.WithTransaction;
 import io.quarkus.logging.Log;
@@ -118,10 +120,12 @@ public class EventServiceService {
                         violations.iterator().next().getPropertyPath().toString(),
                         violations.iterator().next().getMessage()
                     );
-                
-                if(createEventDTO.getStartDateTime().isAfter(createEventDTO.getEstimatedEndDateTime()))
-                    throw new EventServiceIllegalInputException("startDateTime_estimatedEndDateTime", "Start date time cannot be after estimated end time");
-            
+
+                    try {
+                        EventDateTimeValidator.validate(createEventDTO.getStartBookingDateTime(), createEventDTO.getEndBookingDateTime(), createEventDTO.getStartDateTime(), createEventDTO.getEstimatedEndDateTime());
+                    } catch (EventIllegalInputException e) {
+                        throw new EventServiceIllegalInputException(e.getMessage(), e.getCause());
+                    }
                 return null;
             })
             .flatMap(ignore -> createEvent);
@@ -144,8 +148,13 @@ public class EventServiceService {
             .map((EventService persistedEventService) -> {
                 Instant startDateTime = updateEventDTO.getStartDateTime() != null ? updateEventDTO.getStartDateTime() : persistedEventService.getStartDateTime();
                 Instant estimatedEndDateTime = updateEventDTO.getEstimatedEndDateTime() != null ? updateEventDTO.getEstimatedEndDateTime() : persistedEventService.getEstimatedEndDateTime();
-                if(startDateTime.isAfter(estimatedEndDateTime))
-                    throw new EventServiceIllegalInputException("startDateTime_estimatedEndDateTime", "Start date time cannot be after estimated end time");
+                Instant startBookingDateTime = updateEventDTO.getStartBookingDateTime() != null ? updateEventDTO.getStartBookingDateTime() : persistedEventService.getStartBookingDateTime();
+                Instant endBookingDateTime = updateEventDTO.getEndBookingDateTime() != null ? updateEventDTO.getEndBookingDateTime() : persistedEventService.getEndBookingDateTime();
+                try {
+                    EventDateTimeValidator.validate(startBookingDateTime, endBookingDateTime, startDateTime, estimatedEndDateTime);
+                } catch (EventIllegalInputException e) {
+                    throw new EventServiceIllegalInputException(e.getMessage(), e.getCause());
+                }
                 return persistedEventService;
             })
             .map((EventService persistedEventService) -> {
@@ -158,6 +167,12 @@ public class EventServiceService {
 
                 if(updateEventDTO.getEstimatedEndDateTime() != null)
                     persistedEventService.setEstimatedEndDateTime(updateEventDTO.getEstimatedEndDateTime());
+
+                if(updateEventDTO.getStartBookingDateTime() != null)
+                    persistedEventService.setStartBookingDateTime(updateEventDTO.getStartBookingDateTime());
+
+                if(updateEventDTO.getEndBookingDateTime() != null)
+                    persistedEventService.setEndBookingDateTime(updateEventDTO.getEndBookingDateTime());
 
                 if(updateEventDTO.getLocation() != null)
                     persistedEventService.setLocation(updateEventDTO.getLocation());

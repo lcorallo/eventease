@@ -1018,7 +1018,7 @@
         }
       },
       "CreateEventDTO" : {
-        "required" : [ "activity", "code", "supplier" ],
+        "required" : [ "activity", "startDateTime", "estimatedEndDateTime", "code", "supplier" ],
         "type" : "object",
         "properties" : {
           "activity" : {
@@ -1028,6 +1028,12 @@
             "$ref" : "#/components/schemas/Instant"
           },
           "estimatedEndDateTime" : {
+            "$ref" : "#/components/schemas/Instant"
+          },
+          "startBookingDateTime" : {
+            "$ref" : "#/components/schemas/Instant"
+          },
+          "endBookingDateTime" : {
             "$ref" : "#/components/schemas/Instant"
           },
           "location" : {
@@ -1047,7 +1053,7 @@
         }
       },
       "CreateOperationDTO" : {
-        "required" : [ "event", "activity", "operator" ],
+        "required" : [ "event", "activity", "startDateTime", "estimatedEndDateTime", "operator" ],
         "type" : "object",
         "properties" : {
           "event" : {
@@ -1060,6 +1066,12 @@
             "$ref" : "#/components/schemas/Instant"
           },
           "estimatedEndDateTime" : {
+            "$ref" : "#/components/schemas/Instant"
+          },
+          "startBookingDateTime" : {
+            "$ref" : "#/components/schemas/Instant"
+          },
+          "endBookingDateTime" : {
             "$ref" : "#/components/schemas/Instant"
           },
           "location" : {
@@ -1092,6 +1104,12 @@
               "type" : "string"
             }
           },
+          "startBookingDateTime" : {
+            "$ref" : "#/components/schemas/Instant"
+          },
+          "endBookingDateTime" : {
+            "$ref" : "#/components/schemas/Instant"
+          },
           "startDateTime" : {
             "$ref" : "#/components/schemas/Instant"
           },
@@ -1123,7 +1141,7 @@
         }
       },
       "EventStatus" : {
-        "enum" : [ "DRAFT", "PUBLISHED", "BOOKABLE", "IN_PROGRESS", "COMPLETED", "CANCELLED", "CLOSED" ],
+        "enum" : [ "DRAFT", "PUBLISHED", "IN_PROGRESS", "COMPLETED", "CANCELLED", "CLOSED" ],
         "type" : "string"
       },
       "Instant" : {
@@ -1142,6 +1160,12 @@
           },
           "activity" : {
             "$ref" : "#/components/schemas/UUID"
+          },
+          "startBookingDateTime" : {
+            "$ref" : "#/components/schemas/Instant"
+          },
+          "endBookingDateTime" : {
+            "$ref" : "#/components/schemas/Instant"
           },
           "startDateTime" : {
             "$ref" : "#/components/schemas/Instant"
@@ -1268,6 +1292,12 @@
           "estimatedEndDateTime" : {
             "$ref" : "#/components/schemas/Instant"
           },
+          "startBookingDateTime" : {
+            "$ref" : "#/components/schemas/Instant"
+          },
+          "endBookingDateTime" : {
+            "$ref" : "#/components/schemas/Instant"
+          },
           "location" : {
             "$ref" : "#/components/schemas/UUID"
           },
@@ -1296,6 +1326,12 @@
             "$ref" : "#/components/schemas/Instant"
           },
           "estimatedEndDateTime" : {
+            "$ref" : "#/components/schemas/Instant"
+          },
+          "startBookingDateTime" : {
+            "$ref" : "#/components/schemas/Instant"
+          },
+          "endBookingDateTime" : {
             "$ref" : "#/components/schemas/Instant"
           },
           "location" : {

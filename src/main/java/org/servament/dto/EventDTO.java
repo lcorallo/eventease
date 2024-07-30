@@ -21,6 +21,10 @@ public class EventDTO {
 
     private Set<UUID> operations;
 
+    private Instant startBookingDateTime;
+
+    private Instant endBookingDateTime;
+
     private Instant startDateTime;
 
     private Instant estimatedEndDateTime;

@@ -29,6 +29,7 @@ import org.servament.model.filter.PaginationFilter;
 import org.servament.repository.IEventServiceRepository;
 import org.servament.util.EventDateTimeValidator;
 
+import io.quarkus.hibernate.reactive.panache.common.WithSession;
 import io.quarkus.hibernate.reactive.panache.common.WithTransaction;
 import io.quarkus.logging.Log;
 import io.quarkus.runtime.StartupEvent;
@@ -87,18 +88,22 @@ public class EventServiceService {
         this.fetchWithTimeSliceMinutes = fetchWithTimeSliceMinutes;
     }
 
+    @WithSession
     public Uni<List<EventDTO>> list(EventServiceFilter filter) {
         return this.eventServiceRepository.list(filter).map(EventServiceMapper.INSTANCE::toDTOs);
     }
-
+    
+    @WithSession
     public Uni<EventDTO> find(UUID id) {
         return this.eventServiceRepository.find(id).map(EventServiceMapper.INSTANCE::toDTO);
     }
 
+    @WithSession
     public Uni<EventDTO> findByCode(String code) {
         return this.eventServiceRepository.findByCode(code).map(EventServiceMapper.INSTANCE::toDTO);
     }
-
+    
+    @WithSession
     public Uni<Pagination<EventDTO>> pagination(PaginationFilter paginationFilter, EventServiceFilter filter) {
         return this.eventServiceRepository.pagination(paginationFilter, filter).map(EventServiceMapper.INSTANCE::toPaginationDTO);
     }

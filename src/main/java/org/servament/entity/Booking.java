@@ -22,6 +22,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,7 +37,12 @@ import lombok.Setter;
 public class Booking extends PanacheEntityBase{
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(
+            name = "bookingSequence",
+            sequenceName = "booking_id_seq",
+            allocationSize = 1,
+            initialValue = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "bookingSequence")
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)

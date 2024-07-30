@@ -15,7 +15,6 @@ import org.servament.model.filter.EventServiceFilter;
 import org.servament.model.filter.PaginationFilter;
 import org.servament.service.EventServiceService;
 
-import io.quarkus.hibernate.reactive.panache.common.WithSession;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
@@ -34,7 +33,6 @@ import jakarta.ws.rs.core.Response;
 
 @Path("/")
 @RequestScoped
-@WithSession
 public class EventResource {
     
     private final EventServiceService eventServiceService;

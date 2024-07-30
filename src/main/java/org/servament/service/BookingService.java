@@ -24,6 +24,7 @@ import org.servament.model.filter.PaginationFilter;
 import org.servament.repository.IBookingRepository;
 import org.servament.repository.IEventServiceRepository;
 
+import io.quarkus.hibernate.reactive.panache.common.WithSession;
 import io.quarkus.hibernate.reactive.panache.common.WithTransaction;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.tuples.Tuple2;
@@ -50,14 +51,17 @@ public class BookingService {
         this.eventServiceRepository = eventServiceRepository;
     }
 
+    @WithSession
     public Uni<List<BookingDTO>> list(BookingFilter filter) {
         return this.bookingRepository.list(filter).map(BookingMapper.INSTANCE::toDTOs);
     }
 
+    @WithSession
     public Uni<BookingDTO> find(Long id) {
         return this.bookingRepository.find(id).map(BookingMapper.INSTANCE::toDTO);
     }
 
+    @WithSession
     public Uni<Pagination<BookingDTO>> pagination(PaginationFilter paginationFilter, BookingFilter bookingFilter) {
         return this.bookingRepository.pagination(paginationFilter, bookingFilter).map(BookingMapper.INSTANCE::toPaginationDTO);
     }

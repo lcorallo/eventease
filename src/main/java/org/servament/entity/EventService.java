@@ -41,7 +41,7 @@ public class EventService extends Event {
     @JsonManagedReference
     private List<EventOperation> operations;
 
-    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "event", cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
     @JsonBackReference
     private List<Booking> bookings;
 

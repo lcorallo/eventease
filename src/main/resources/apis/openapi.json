@@ -26,6 +26,15 @@
     "/booking" : {
       "post" : {
         "tags" : [ "Booking Resource" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CreateBookingDTO"
+              }
+            }
+          }
+        },
         "responses" : {
           "200" : {
             "description" : "OK",
@@ -1033,6 +1042,18 @@
             "maxLength" : 1000,
             "pattern" : "\\S",
             "type" : "string"
+          }
+        }
+      },
+      "CreateBookingDTO" : {
+        "required" : [ "event", "consumer" ],
+        "type" : "object",
+        "properties" : {
+          "event" : {
+            "$ref" : "#/components/schemas/UUID"
+          },
+          "consumer" : {
+            "$ref" : "#/components/schemas/UUID"
           }
         }
       },

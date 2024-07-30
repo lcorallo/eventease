@@ -29,6 +29,7 @@ VALUES
 (13,'45d6e7a2-f9b7-49f0-8a5c-c2b6a0b8aeaf','5644095c-df28-471b-8b4e-1307fcbe6983', 'PENDING', '2024-07-13 22:00:00', '2024-07-13 22:00:00'),
 (14,'cdf7a3d7-ebe3-42e9-986d-5d5c5b750446','f7c9948d-bbc8-460f-8ddb-7873e64c9d43', 'CONFIRMED', '2024-07-14 23:00:00', '2024-07-14 23:00:00'),
 (15,'0bfea64f-e1a6-432d-978a-5425e2b065bc','575bc176-6a2f-4b31-bfac-121466f39d9c', 'CANCELLED', '2024-07-15 00:00:00', '2024-07-15 00:00:00');
+SELECT setval('booking_id_seq', 15, true);
 
 -- Inserting 5 records into the event_operation table
 INSERT INTO event_operation (id, activity, start_datetime, estimated_end_datetime, end_datetime, status, note, location, created_at, update_at, event_service_id, operator, num_partecipants)

@@ -3,9 +3,10 @@ package org.servament.repository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.servament.entity.Booking;
-import org.servament.exception.BookingNotFoundException;
+import org.servament.exception.booking.BookingNotFoundException;
 import org.servament.model.BookingStatus;
 import org.servament.model.Pagination;
 import org.servament.model.filter.BookingFilter;
@@ -88,7 +89,7 @@ public class BookingRepository implements IBookingRepository {
 
     @Override
     public Uni<Booking> create(Booking incomingEntity) {
-       return this.persist(incomingEntity);
+       return this.persistAndFlush(incomingEntity);
     }
 
     @Override
@@ -98,6 +99,11 @@ public class BookingRepository implements IBookingRepository {
                         ? Uni.createFrom().failure(new BookingNotFoundException(id))
                         : this.delete(booking)
             );
+    }
+
+    @Override
+    public Uni<Long> countTickets(UUID eventId) {
+        return this.count("status = ?1 and event.id = ?2", BookingStatus.CONFIRMED, eventId);
     }
 
 }

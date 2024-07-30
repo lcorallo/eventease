@@ -1,4 +1,6 @@
-package org.servament.exception;
+package org.servament.exception.booking;
+
+import org.servament.exception.EventEaseException;
 
 public class BookingNotFoundException extends EventEaseException {
 

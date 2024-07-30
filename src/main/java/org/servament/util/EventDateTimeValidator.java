@@ -6,6 +6,10 @@ import org.servament.exception.event.EventIllegalInputException;
 
 public class EventDateTimeValidator {
 
+    private EventDateTimeValidator() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static void validate(Instant startBookingDateTime, Instant endBookingEndDateTime, Instant startDateTime, Instant estimatedEndDateTime) {
 
         if(startDateTime.isAfter(estimatedEndDateTime))

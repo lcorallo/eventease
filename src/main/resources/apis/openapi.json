@@ -334,6 +334,50 @@
         }
       }
     },
+    "/events/code/{code}" : {
+      "get" : {
+        "tags" : [ "Event Resource" ],
+        "parameters" : [ {
+          "name" : "code",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/EventDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head" : {
+        "tags" : [ "Event Resource" ],
+        "parameters" : [ {
+          "name" : "code",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : { }
+            }
+          }
+        }
+      }
+    },
     "/events/{id}" : {
       "get" : {
         "tags" : [ "Event Resource" ],
@@ -359,6 +403,25 @@
         }
       },
       "delete" : {
+        "tags" : [ "Event Resource" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/UUID"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : { }
+            }
+          }
+        }
+      },
+      "head" : {
         "tags" : [ "Event Resource" ],
         "parameters" : [ {
           "name" : "id",

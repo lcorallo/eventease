@@ -4,6 +4,10 @@ import java.util.UUID;
 
 public class EventServiceNotFoundException extends EventEaseException {
 
+    public EventServiceNotFoundException(String code) {
+        super(String.format("Does not exists any event service with the following code: %s", code));
+    }
+
     public EventServiceNotFoundException(UUID id) {
         super(String.format("Does not exists any event service with the following UUID: %s", id));
     }

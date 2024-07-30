@@ -107,6 +107,13 @@ public class EventServiceRepository implements IEventServiceRepository {
     }
 
     @Override
+    public Uni<EventService> findByCode(String code) {
+        return this.find("code", code)
+            .singleResult()
+            .onFailure().transform((Throwable f) -> new EventServiceNotFoundException(code));
+    }
+
+    @Override
     public Uni<EventService> create(EventService incomingEntity) {
         return this.persist(incomingEntity);
     }

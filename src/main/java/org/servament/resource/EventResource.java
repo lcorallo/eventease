@@ -22,6 +22,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HEAD;
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -95,6 +96,28 @@ public class EventResource {
     @Path("/events/{id}")
     public Uni<EventDTO> findById(@PathParam("id") UUID id) {
         return this.eventServiceService.find(id);
+    }
+    
+    @GET
+    @Path("/events/code/{code}")
+    public Uni<EventDTO> findByCode(@PathParam("code") String code) {
+        return this.eventServiceService.findByCode(code);
+    }
+    
+
+    @HEAD
+    @Path("/events/{id}")
+    public Uni<Response> existsById(@PathParam("id") UUID id) {
+        return this.eventServiceService.find(id)
+            .map((EventDTO ignored) -> Response.ok().build());
+    }
+
+    
+    @HEAD
+    @Path("/events/code/{code}")
+    public Uni<Response> existsByCode(@PathParam("code") String code) {
+        return this.eventServiceService.findByCode(code)
+            .map((EventDTO ignored) -> Response.ok().build());
     }
 
     @POST

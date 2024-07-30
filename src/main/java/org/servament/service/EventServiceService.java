@@ -93,6 +93,10 @@ public class EventServiceService {
         return this.eventServiceRepository.find(id).map(EventServiceMapper.INSTANCE::toDTO);
     }
 
+    public Uni<EventDTO> findByCode(String code) {
+        return this.eventServiceRepository.findByCode(code).map(EventServiceMapper.INSTANCE::toDTO);
+    }
+
     public Uni<Pagination<EventDTO>> pagination(PaginationFilter paginationFilter, EventServiceFilter filter) {
         return this.eventServiceRepository.pagination(paginationFilter, filter).map(EventServiceMapper.INSTANCE::toPaginationDTO);
     }

@@ -104,15 +104,13 @@ public class EventResource {
         return this.eventServiceService.findByCode(code);
     }
     
-
     @HEAD
     @Path("/events/{id}")
     public Uni<Response> existsById(@PathParam("id") UUID id) {
         return this.eventServiceService.find(id)
             .map((EventDTO ignored) -> Response.ok().build());
     }
-
-    
+ 
     @HEAD
     @Path("/events/code/{code}")
     public Uni<Response> existsByCode(@PathParam("code") String code) {

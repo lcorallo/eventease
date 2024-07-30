@@ -22,6 +22,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HEAD;
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -95,6 +96,13 @@ public class OperationResource {
     @Path("/operations/{id}")
     public Uni<OperationDTO> findById(@PathParam("id") UUID id) {
         return this.eventOperationService.find(id);
+    }
+
+    @HEAD
+    @Path("/events/{id}")
+    public Uni<Response> existsById(@PathParam("id") UUID id) {
+        return this.eventOperationService.find(id)
+            .map((OperationDTO ignored) -> Response.ok().build());
     }
 
     @POST

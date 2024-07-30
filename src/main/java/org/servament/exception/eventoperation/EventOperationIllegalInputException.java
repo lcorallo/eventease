@@ -1,4 +1,6 @@
-package org.servament.exception;
+package org.servament.exception.eventoperation;
+
+import org.servament.exception.EventEaseException;
 
 public class EventOperationIllegalInputException extends EventEaseException {
 

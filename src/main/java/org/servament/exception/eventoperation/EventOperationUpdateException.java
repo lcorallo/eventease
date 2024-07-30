@@ -1,6 +1,8 @@
-package org.servament.exception;
+package org.servament.exception.eventoperation;
 
 import java.util.UUID;
+
+import org.servament.exception.EventEaseException;
 
 public class EventOperationUpdateException extends EventEaseException {
     

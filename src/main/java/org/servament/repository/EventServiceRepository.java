@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.servament.entity.EventService;
-import org.servament.exception.EventServiceNotFoundException;
+import org.servament.exception.eventservice.EventServiceNotFoundException;
 import org.servament.model.EventStatus;
 import org.servament.model.Pagination;
 import org.servament.model.filter.EventServiceFilter;

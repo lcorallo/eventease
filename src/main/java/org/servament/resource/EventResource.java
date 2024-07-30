@@ -33,7 +33,6 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 @Path("/")
-@Produces(MediaType.APPLICATION_JSON)
 @RequestScoped
 @WithSession
 public class EventResource {
@@ -47,6 +46,7 @@ public class EventResource {
 
     @GET
     @Path("/events")
+    @Produces(MediaType.APPLICATION_JSON)
     public Uni<List<EventDTO>> list(
         @QueryParam("codes") Set<String> codes,
         @QueryParam("activities") Set<UUID> activities,
@@ -71,6 +71,7 @@ public class EventResource {
 
     @GET
     @Path("/events:paged")
+    @Produces(MediaType.APPLICATION_JSON)
     public Uni<Pagination<EventDTO>> paginated(
         @QueryParam("codes") Set<String> codes,
         @QueryParam("activities") Set<UUID> activities,
@@ -94,12 +95,14 @@ public class EventResource {
 
     @GET
     @Path("/events/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
     public Uni<EventDTO> findById(@PathParam("id") UUID id) {
         return this.eventServiceService.find(id);
     }
     
     @GET
     @Path("/events/code/{code}")
+    @Produces(MediaType.APPLICATION_JSON)
     public Uni<EventDTO> findByCode(@PathParam("code") String code) {
         return this.eventServiceService.findByCode(code);
     }
@@ -140,6 +143,7 @@ public class EventResource {
     @POST
     @Path("/event")
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Uni<EventDTO> create(CreateEventDTO createEventDTO) {
         return this.eventServiceService.create(createEventDTO);
     }
@@ -147,6 +151,7 @@ public class EventResource {
     @PATCH
     @Path("/events/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Uni<EventDTO> update(@PathParam("id") UUID id, UpdateEventDTO updateEventDTO) {
         return this.eventServiceService.patch(id, updateEventDTO);
     }

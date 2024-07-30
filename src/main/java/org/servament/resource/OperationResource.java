@@ -33,7 +33,6 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 @Path("/")
-@Produces(MediaType.APPLICATION_JSON)
 @RequestScoped
 @WithSession
 public class OperationResource {
@@ -47,6 +46,7 @@ public class OperationResource {
 
     @GET
     @Path("/operations")
+    @Produces(MediaType.APPLICATION_JSON)
     public Uni<List<OperationDTO>> list(
         @QueryParam("events") Set<UUID> events,
         @QueryParam("activities") Set<UUID> activities,
@@ -71,6 +71,7 @@ public class OperationResource {
 
     @GET
     @Path("/operations:paged")
+    @Produces(MediaType.APPLICATION_JSON)
     public Uni<Pagination<OperationDTO>> paginated(    
         @QueryParam("events") Set<UUID> events,
         @QueryParam("activities") Set<UUID> activities,
@@ -94,12 +95,13 @@ public class OperationResource {
 
     @GET
     @Path("/operations/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
     public Uni<OperationDTO> findById(@PathParam("id") UUID id) {
         return this.eventOperationService.find(id);
     }
 
     @HEAD
-    @Path("/events/{id}")
+    @Path("/operations/{id}")
     public Uni<Response> existsById(@PathParam("id") UUID id) {
         return this.eventOperationService.find(id)
             .map((OperationDTO ignored) -> Response.ok().build());
@@ -127,6 +129,7 @@ public class OperationResource {
     @POST
     @Path("/operation")
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Uni<OperationDTO> create(CreateOperationDTO createOperationDTO) {
         return this.eventOperationService.create(createOperationDTO);
 
@@ -135,6 +138,7 @@ public class OperationResource {
     @PATCH
     @Path("/operations/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Uni<OperationDTO> update(@PathParam("id") UUID id, UpdateOperationDTO updateOperationDTO) {
         return this.eventOperationService.patch(id, updateOperationDTO);
     }

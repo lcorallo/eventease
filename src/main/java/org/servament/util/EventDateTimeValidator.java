@@ -2,7 +2,7 @@ package org.servament.util;
 
 import java.time.Instant;
 
-import org.servament.exception.EventIllegalInputException;
+import org.servament.exception.event.EventIllegalInputException;
 
 public class EventDateTimeValidator {
 

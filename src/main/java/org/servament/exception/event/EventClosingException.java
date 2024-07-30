@@ -1,6 +1,8 @@
-package org.servament.exception;
+package org.servament.exception.event;
 
 import java.util.UUID;
+
+import org.servament.exception.EventEaseException;
 
 public class EventClosingException extends EventEaseException {
     

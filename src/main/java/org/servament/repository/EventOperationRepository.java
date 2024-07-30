@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 import org.servament.entity.EventOperation;
 import org.servament.entity.EventService;
-import org.servament.exception.EventOperationNotFoundException;
+import org.servament.exception.eventoperation.EventOperationNotFoundException;
 import org.servament.model.EventStatus;
 import org.servament.model.Pagination;
 import org.servament.model.filter.EventOperationFilter;

@@ -552,6 +552,20 @@ paths:
           description: OK
           content:
             application/json: {}
+    head:
+      tags:
+      - Operation Resource
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          $ref: "#/components/schemas/UUID"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json: {}
     patch:
       tags:
       - Operation Resource

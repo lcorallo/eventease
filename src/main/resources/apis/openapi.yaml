@@ -34,6 +34,33 @@ paths:
     get:
       tags:
       - Booking Resource
+      parameters:
+      - name: events
+        in: query
+        schema:
+          uniqueItems: true
+          type: array
+          items:
+            format: uuid
+            pattern: "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}"
+            type: string
+      - name: limit
+        in: query
+        schema:
+          format: int32
+          type: integer
+      - name: offset
+        in: query
+        schema:
+          format: int32
+          type: integer
+      - name: statuses
+        in: query
+        schema:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: "#/components/schemas/BookingStatus"
       responses:
         "200":
           description: OK
@@ -95,6 +122,33 @@ paths:
     get:
       tags:
       - Booking Resource
+      parameters:
+      - name: events
+        in: query
+        schema:
+          uniqueItems: true
+          type: array
+          items:
+            format: uuid
+            pattern: "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}"
+            type: string
+      - name: numPage
+        in: query
+        schema:
+          format: int32
+          type: integer
+      - name: pageSize
+        in: query
+        schema:
+          format: int32
+          type: integer
+      - name: statuses
+        in: query
+        schema:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: "#/components/schemas/BookingStatus"
       responses:
         "200":
           description: OK
@@ -139,6 +193,10 @@ paths:
           type: array
           items:
             type: string
+      - name: endFrom
+        in: query
+        schema:
+          $ref: "#/components/schemas/Instant"
       - name: limit
         in: query
         schema:
@@ -149,6 +207,10 @@ paths:
         schema:
           format: int32
           type: integer
+      - name: startFrom
+        in: query
+        schema:
+          $ref: "#/components/schemas/Instant"
       - name: statuses
         in: query
         schema:
@@ -274,6 +336,57 @@ paths:
     get:
       tags:
       - Event Resource
+      parameters:
+      - name: activities
+        in: query
+        schema:
+          uniqueItems: true
+          type: array
+          items:
+            format: uuid
+            pattern: "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}"
+            type: string
+      - name: codes
+        in: query
+        schema:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+      - name: endFrom
+        in: query
+        schema:
+          $ref: "#/components/schemas/Instant"
+      - name: numPage
+        in: query
+        schema:
+          format: int32
+          type: integer
+      - name: pageSize
+        in: query
+        schema:
+          format: int32
+          type: integer
+      - name: startFrom
+        in: query
+        schema:
+          $ref: "#/components/schemas/Instant"
+      - name: statuses
+        in: query
+        schema:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: "#/components/schemas/EventStatus"
+      - name: suppliers
+        in: query
+        schema:
+          uniqueItems: true
+          type: array
+          items:
+            format: uuid
+            pattern: "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}"
+            type: string
       responses:
         "200":
           description: OK
@@ -311,6 +424,10 @@ paths:
             format: uuid
             pattern: "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}"
             type: string
+      - name: endFrom
+        in: query
+        schema:
+          $ref: "#/components/schemas/Instant"
       - name: events
         in: query
         schema:
@@ -339,6 +456,10 @@ paths:
             format: uuid
             pattern: "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}"
             type: string
+      - name: startFrom
+        in: query
+        schema:
+          $ref: "#/components/schemas/Instant"
       - name: statuses
         in: query
         schema:
@@ -465,6 +586,10 @@ paths:
             format: uuid
             pattern: "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}"
             type: string
+      - name: endFrom
+        in: query
+        schema:
+          $ref: "#/components/schemas/Instant"
       - name: events
         in: query
         schema:
@@ -493,6 +618,10 @@ paths:
         schema:
           format: int32
           type: integer
+      - name: startFrom
+        in: query
+        schema:
+          $ref: "#/components/schemas/Instant"
       - name: statuses
         in: query
         schema:

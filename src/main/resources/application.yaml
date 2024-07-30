@@ -13,3 +13,9 @@ quarkus:
     info-contact-url: http://exampleurl.com/contact
     info-license-name: MIT License
     info-license-url: https://opensource.org/license/mit
+
+  
+app:
+  scheduler:
+    fetch-every-minutes: 2
+    fetch-with-time-slice-minutes: 2

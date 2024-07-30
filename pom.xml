@@ -59,6 +59,10 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-hibernate-reactive-rest-data-panache</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.smallrye.reactive</groupId>
+            <artifactId>smallrye-mutiny-vertx-web-client</artifactId>
+        </dependency>
 
         <!-- Rest Services -->
         <dependency>

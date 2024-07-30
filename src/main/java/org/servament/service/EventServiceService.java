@@ -1,10 +1,13 @@
 package org.servament.service;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.hibernate.reactive.mutiny.Mutiny;
 import org.servament.dto.ClosingReasonDTO;
 import org.servament.dto.CreateEventDTO;
 import org.servament.dto.EventDTO;
@@ -16,6 +19,7 @@ import org.servament.exception.EventEaseException;
 import org.servament.exception.EventPublicationException;
 import org.servament.exception.EventServiceIllegalInputException;
 import org.servament.exception.EventServiceUpdateException;
+import org.servament.exception.SchedulationException;
 import org.servament.mapper.EventServiceMapper;
 import org.servament.model.EventStatus;
 import org.servament.model.Pagination;
@@ -24,8 +28,13 @@ import org.servament.model.filter.PaginationFilter;
 import org.servament.repository.IEventServiceRepository;
 
 import io.quarkus.hibernate.reactive.panache.common.WithTransaction;
+import io.quarkus.logging.Log;
+import io.quarkus.runtime.StartupEvent;
+import io.quarkus.vertx.VertxContextSupport;
+import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Observes;
 import jakarta.inject.Inject;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
@@ -37,9 +46,43 @@ public class EventServiceService {
 
     private final IEventServiceRepository eventServiceRepository;
 
+    private final Integer fetchEveryMinutes;
+
+    private final Integer fetchWithTimeSliceMinutes;
+
+    void onStart(@Observes StartupEvent ev, Mutiny.SessionFactory sf) {
+        Multi.createFrom().ticks().every(Duration.ofMinutes(fetchEveryMinutes))
+            .map((Long ignored) -> {
+                EventServiceFilter scheduledFilter = new EventServiceFilter();
+                scheduledFilter.setFromStartDate(Instant.now());
+                scheduledFilter.setEndStartDate(Instant.now().plus(Duration.ofMinutes(fetchWithTimeSliceMinutes)));
+                scheduledFilter.setStatuses(Set.of(EventStatus.PUBLISHED));
+                scheduledFilter.setLimit(1000);
+                try {
+                    return VertxContextSupport.subscribeAndAwait(() -> sf.withTransaction(s -> this.eventServiceRepository.list(scheduledFilter)
+                        .flatMap(list -> {
+                            for(EventService event: list)
+                                event.setStatus(EventStatus.IN_PROGRESS);
+                            return Uni.createFrom().item(list);
+                        })
+                    ));
+                } catch (Throwable e) {
+                    throw new SchedulationException(e.getCause());
+                }
+            })
+            .subscribe()
+            .with((List<EventService> incomingEventsOperations) -> Log.info("New EventService in progress: " + incomingEventsOperations.size()));
+    }
+
     @Inject
-    public EventServiceService(IEventServiceRepository eventServiceRepository) {
+    public EventServiceService(
+        IEventServiceRepository eventServiceRepository,
+        @ConfigProperty(name = "app.scheduler.fetch-every-minutes") Integer fetchEveryMinutes,    
+        @ConfigProperty(name = "app.scheduler.fetch-with-time-slice-minutes") Integer fetchWithTimeSliceMinutes  
+    ) {
         this.eventServiceRepository = eventServiceRepository;
+        this.fetchEveryMinutes = fetchEveryMinutes;
+        this.fetchWithTimeSliceMinutes = fetchWithTimeSliceMinutes;
     }
 
     public Uni<List<EventDTO>> list(EventServiceFilter filter) {

@@ -26,11 +26,15 @@ public class HandlerExceptionMapper implements ExceptionMapper<EventEaseExceptio
         switch (exceptionClassName) {
             case "EventServiceIllegalInputException":
             case "EventOperationIllegalInputException":
+            case "BookingIllegalInputException":
                 errorResponseStatus = Status.BAD_REQUEST;
                 break;
             case "EventPublicationException":
             case "EventClosingException":
             case "EventCompletingException":
+            case "BookingFullReservationException":
+            case "BookingReservationDeniedException":
+            case "BookingReservationEventNotPublishedException":
                 errorResponseStatus = Status.FORBIDDEN;
                 break;
             case "EventServiceNotFoundException":

@@ -2,13 +2,20 @@ package org.servament.service;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Set;
 
 import org.servament.dto.BookingDTO;
 import org.servament.dto.CreateBookingDTO;
+import org.servament.dto.UpdateBookingDTO;
+import org.servament.entity.Booking;
 import org.servament.entity.EventService;
+import org.servament.exception.EventEaseException;
 import org.servament.exception.booking.BookingFullReservationException;
+import org.servament.exception.booking.BookingIllegalInputException;
 import org.servament.exception.booking.BookingReservationDeniedException;
 import org.servament.exception.booking.BookingReservationEventNotPublishedException;
+import org.servament.exception.booking.BookingUpdateException;
+import org.servament.exception.eventservice.EventServiceIllegalInputException;
 import org.servament.mapper.BookingMapper;
 import org.servament.model.EventStatus;
 import org.servament.model.Pagination;
@@ -22,6 +29,10 @@ import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.tuples.Tuple2;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 
 @ApplicationScoped
 public class BookingService {
@@ -52,8 +63,18 @@ public class BookingService {
     }
 
     @WithTransaction
-    public Uni<BookingDTO> create(CreateBookingDTO createBookingDTO) {        
-       return Uni.createFrom().item(Instant.now())
+    public Uni<BookingDTO> create(CreateBookingDTO createBookingDTO) {
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
+
+        return Uni.createFrom().item(validator.validate(createBookingDTO))
+            .flatMap((Set<ConstraintViolation<CreateBookingDTO>> violations) -> !violations.isEmpty()
+                ? Uni.createFrom().failure(new EventServiceIllegalInputException(
+                    violations.iterator().next().getPropertyPath().toString(),
+                    violations.iterator().next().getMessage())
+                )
+                : Uni.createFrom().item(Instant.now())
+            )
             .flatMap((Instant now) -> this.eventServiceRepository.find(createBookingDTO.getEvent())
                     .map((EventService eventRef) -> {
                         if(!eventRef.getStatus().equals(EventStatus.PUBLISHED))
@@ -82,5 +103,38 @@ public class BookingService {
             .map((EventService eventRef) -> BookingMapper.INSTANCE.toEntity(createBookingDTO, eventRef))
             .flatMap(this.bookingRepository::create)
             .map(BookingMapper.INSTANCE::toDTO);
+    }
+
+    @WithTransaction
+    public Uni<BookingDTO> patch(Long id, UpdateBookingDTO updateBookingDTO) {
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
+
+        return Uni.createFrom().item(validator.validate(updateBookingDTO))
+            .flatMap((Set<ConstraintViolation<UpdateBookingDTO>> violations) -> !violations.isEmpty()
+                ? Uni.createFrom().failure(new BookingIllegalInputException(
+                    violations.iterator().next().getPropertyPath().toString(),
+                    violations.iterator().next().getMessage())
+                )
+                : Uni.createFrom().item(id)
+            )
+            .flatMap(bookingRepository::find)
+            .map((Booking persistedBooking) -> {
+
+                if(updateBookingDTO.getConsumer() != null)
+                    persistedBooking.setConsumer(updateBookingDTO.getConsumer());
+
+                return persistedBooking;
+            })
+            .map(BookingMapper.INSTANCE::toDTO)
+            .onFailure().transform(e -> e instanceof EventEaseException
+                ? e
+                : new BookingUpdateException(e.getCause())
+            );
+    }
+
+    @WithTransaction
+    public Uni<Void> remove(Long id) {
+        return this.bookingRepository.remove(id);
     }
 }

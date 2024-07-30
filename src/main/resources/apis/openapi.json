@@ -151,7 +151,7 @@
           }
         }
       },
-      "patch" : {
+      "head" : {
         "tags" : [ "Booking Resource" ],
         "parameters" : [ {
           "name" : "id",
@@ -167,6 +167,39 @@
             "description" : "OK",
             "content" : {
               "application/json" : { }
+            }
+          }
+        }
+      },
+      "patch" : {
+        "tags" : [ "Booking Resource" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "format" : "int64",
+            "type" : "integer"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UpdateBookingDTO"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/BookingDTO"
+                }
+              }
             }
           }
         }
@@ -1319,6 +1352,15 @@
         "format" : "uuid",
         "pattern" : "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}",
         "type" : "string"
+      },
+      "UpdateBookingDTO" : {
+        "required" : [ "consumer" ],
+        "type" : "object",
+        "properties" : {
+          "consumer" : {
+            "$ref" : "#/components/schemas/UUID"
+          }
+        }
       },
       "UpdateEventDTO" : {
         "type" : "object",

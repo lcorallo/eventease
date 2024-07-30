@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.servament.dto.BookingDTO;
 import org.servament.dto.CreateBookingDTO;
+import org.servament.dto.UpdateBookingDTO;
 import org.servament.model.BookingStatus;
 import org.servament.model.Pagination;
 import org.servament.model.filter.BookingFilter;
@@ -20,6 +21,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HEAD;
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -80,6 +82,13 @@ public class BookingResource {
     public Uni<BookingDTO> findById(@PathParam("id") Long id) {
         return this.bookingService.find(id);
     }
+        
+    @HEAD
+    @Path("/bookings/{id}")
+    public Uni<Response> existsById(@PathParam("id") Long id) {
+        return this.bookingService.find(id)
+            .map((BookingDTO ignored) -> Response.ok().build());
+    }
 
     @POST
     @Path("/booking")
@@ -91,14 +100,17 @@ public class BookingResource {
 
     @PATCH
     @Path("/bookings/{id}")
-    public Uni<Response> update(@PathParam("id") Long id) {
-        throw new UnsupportedOperationException();
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Uni<BookingDTO> update(@PathParam("id") Long id, UpdateBookingDTO updateBookingDTO) {
+        return this.bookingService.patch(id, updateBookingDTO);
     }
 
     @DELETE
     @Path("/bookings/{id}")
     public Uni<Response> remove(@PathParam("id") Long id) {
-        throw new UnsupportedOperationException();
+        return this.bookingService.remove(id)
+            .map(t -> Response.noContent().build());
     }
 
-}   
+}

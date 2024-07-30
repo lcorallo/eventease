@@ -95,10 +95,11 @@ public class BookingRepository implements IBookingRepository {
     @Override
     public Uni<Void> remove(Long id) {
         return this.findById(id)
-            .flatMap((Booking booking) -> booking == null
-                        ? Uni.createFrom().failure(new BookingNotFoundException(id))
-                        : this.delete(booking)
-            );
+            .flatMap((Booking booking) -> {
+                if(booking == null)
+                    return Uni.createFrom().failure(new BookingNotFoundException(id));
+                return this.delete(booking);
+            });
     }
 
     @Override

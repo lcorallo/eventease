@@ -1,7 +1,7 @@
 # 🎉 Event-Ease API
 
 <p align="center">
-  <img src="https://i.ibb.co/Zm4hVmB/Purple-Orange-Pink-Modern-Gradient-Finance-Platform-Animated-Logo-2.png" height="500"/>
+  <img src="https://i.ibb.co/Zm4hVmB/Purple-Orange-Pink-Modern-Gradient-Finance-Platform-Animated-Logo-2.png" width="80%"/>
 </p>
 
 

@@ -1,6 +1,6 @@
 quarkus:
   log:
-    level: DEBUG
+    level: INFO
 
   http:
     cors: true

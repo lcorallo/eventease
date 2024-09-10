@@ -1,5 +1,6 @@
 quarkus:
   swagger-ui:
+    theme: original
     always-include: true
     path: /swagger
   smallrye-openapi:
